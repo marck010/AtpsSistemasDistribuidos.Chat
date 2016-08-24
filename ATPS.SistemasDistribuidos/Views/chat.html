@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Chat </title>
+
+    <link rel="stylesheet" href="../Content/main.css" />
+</head>
+<body>
+    <div class="principal-container" ng-app="ModuloChat">
+        <div class="view-content" ng-controller="ChatController">
+            <div class="view-lateral">
+                <div class="cabecalho">
+                    <div >
+                        <label>Status Conexão:</label>
+                        <span>{{Chat.Status}}</span>
+                        <input type="button" value="Conectar / Desconectar" ng-click ="Chat.ConectarDesconectar()"/>
+                    </div>
+                    <br/>
+                    <br/>
+                    <div class="field-groups">
+
+                        <div>
+                            <label>Meu Nome:</label>
+                            <input class="field-form" type="text" ng-model="Chat.Remetente.Nome" />
+                        </div>
+                        <div>
+                            <label>Destinatario:</label>
+                            <input class="field-form" type="text" ng-model="Chat.Destinatario.Nome" />
+                        </div>
+
+                    </div>
+                </div>
+                <div class="view-conversas">
+                    <div style="" class="conversa" ng-repeat="conversa in Chat.Conversas" ng-click="Chat.SelecionarDestinatario(conversa)">
+                        <span>{{conversa.Destinatario.Nome}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="view-mensagens">
+                <div class="mensagens">
+                    {{!chat.MensagensDestinatario}}
+                    <div ng-repeat="mensagem in chat.MensagensDestinatario">
+                        <span>João{{Chat.Destinatario.Nome}} : {{mensagem.Texto}}</span>
+                    </div>
+                </div>
+                <div class="envio">
+                    <textarea class="field-form" ng-model="Chat.Destinatario.Mensagem" row="50"></textarea>
+                    <input class="botao-acao" type="button" ng-click="Chat.Remetente.Enviar()" value="Enviar" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../libs/angular.min.js"></script>
+<script type="text/javascript" src="../libs/angular-route.js"></script>
+<script type="text/javascript" src="../libs/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="../Controller/ChatController.js"></script>
+</html>

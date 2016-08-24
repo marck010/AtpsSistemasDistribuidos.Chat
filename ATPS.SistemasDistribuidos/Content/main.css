@@ -1,0 +1,160 @@
+﻿body {
+    margin: 0px;
+    padding: 0px;
+    background: white;
+    font-family: "BankGothic Lt BT",Helvetica,Arial,sans-serif;
+}
+
+.cabecalho {
+    float: left;
+    overflow: hidden;
+    width: 100%;
+    border-bottom: 3px solid #73AD21;
+}
+
+.principal-container {
+    width: 100%;
+    overflow: hidden;
+    height: 700px;
+}
+
+.view-content {
+    margin: auto;
+    width: 70%;
+    overflow: hidden;
+    height: 700px;
+}
+
+.view-lateral {
+    margin: 2px;
+    padding: 2px;
+    float: left;
+    border: 3px solid #73AD21;
+    height: 686PX;
+    width: calc(30% - 14px);
+    background-color: #cfe4b3;
+    border-radius: 1px;
+}
+
+.view-conversas {
+    width: 100%;
+    overflow: hidden;
+    float: left;
+    height: 70%;
+}
+
+    .view-conversas .conversa {
+        width: 100%;
+        background-color: #eee;
+        border: solid 1px;
+        cursor: pointer;
+    }
+
+.field-groups {
+    overflow: hidden;
+}
+
+.view-mensagens {
+    margin: 2px;
+    padding: 2px;
+    float: left;
+    border: 3px solid #73AD21;
+    height: 686px;
+    width: calc(70% - 14px);
+    background-color: #cfe4b3;
+    border-radius: 1px;
+}
+.mensagens {
+    overflow: hidden;
+    border-bottom: 3px solid #73AD21;
+    height: calc(90% - 14px);
+    width: 100%;
+    border-radius: 1px;
+}
+
+.view-mensagens .envio {
+    width: 100%;
+    height: calc(10% - 16px);
+    overflow: hidden;
+}
+
+.view-mensagens .field-groups .field-form {
+    overflow: hidden;
+    width: 80%;
+    padding: 3px;
+    height: 25px;
+    border: 1px solid #111;
+    margin: 5px 20px 10px 20px;
+    border-radius: 5px;
+}
+
+.view-mensagens .field-groups .botao-acao {
+    width: 70px;
+    height: 40px;
+    border-radius: 3px;
+    border: 1px solid #111;
+    cursor: pointer;
+}
+
+.view-mensagens .field-groups .botoes-acao :hover {
+    background-color: #eee;
+}
+
+.field-groups div {
+    width: 50%;
+    height: auto;
+    float: left;
+    overflow: hidden;
+}
+
+.field-groups label {
+    margin: 5px 20px 10px 20px;
+}
+
+.field-groups .field-form {
+    overflow: hidden;
+    width: 50%;
+    padding: 3px;
+    height: 25px;
+    border: 1px solid #111;
+    margin: 5px 20px 10px 20px;
+    border-radius: 5px;
+}
+
+    .field-groups .field-form select {
+        height: 31px;
+    }
+
+
+.botoes-acao {
+    float: right;
+    overflow: hidden;
+    height: auto;
+    width: 200px;
+    margin-top: 15px;
+}
+
+    .botoes-acao input {
+        width: 70px;
+        height: 40px;
+        border-radius: 3px;
+        border: 1px solid #111;
+        cursor: pointer;
+    }
+
+        .botoes-acao input:hover {
+            background-color: #eee;
+        }
+
+footer {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: rgba(0,0,0,0.8);
+    text-align: center;
+    padding: 15px 20px;
+    color: white;
+    position: fixed;
+    top: calc(100% - 207px);
+    width: 100%;
+}
