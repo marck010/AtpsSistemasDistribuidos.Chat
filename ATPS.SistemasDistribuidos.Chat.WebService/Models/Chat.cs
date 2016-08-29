@@ -11,9 +11,10 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.Models
         private static Chat _instacia;
         private Chat()
         {
-            Conversas = new List<ConversaModel>();
+            UsuariosConectados = new List<UsuarioModel>();
         }
-        public List<ConversaModel> Conversas { get; set; }
+
+        public static List<UsuarioModel> UsuariosConectados { get; set; }
 
         public static Chat Instancia
         {
@@ -27,26 +28,68 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.Models
                     }
                 }
                 return _instacia;
-
             }
         }
-        public ConversaModel Enviar(string remetente, string destinatario, string mensagem)
+
+        public void ConectarUsuario(string remetente, string chave)
         {
-            var conversa = Conversas.FirstOrDefault(conversaSalva => conversaSalva.Remetente.Nome == remetente && conversaSalva.Remetente.Nome == destinatario);
-            if (conversa != null)
+            var usuario = UsuariosConectados.FirstOrDefault(u => u.Nome == remetente);
+
+            if (usuario == null)
             {
-                conversa.Mensagens.Add(new MensagemModel { Texto = mensagem, DataEnvio = DateTime.Now });
+                UsuariosConectados.Add(new UsuarioModel { Nome = remetente, ChaveConexao = chave });
             }
             else
             {
-                conversa = new ConversaModel()
+                if (usuario.ChaveConexao != chave)
                 {
-                    Destinatario = new UsuarioModel { Nome = destinatario },
-                    Remetente = new UsuarioModel { Nome = remetente }
-                };
-                conversa.Mensagens.Add(new MensagemModel { Texto = mensagem, DataEnvio = DateTime.Now, Conversa = conversa });
+                    usuario.ChaveConexao = chave;
+                }
+      
             }
-            return conversa;
+        }
+        
+        public UsuarioModel ObterUsuarioPorChave(string chave)
+        { 
+            var usuario = UsuariosConectados.FirstOrDefault(u => u.ChaveConexao == chave);
+
+            return usuario;
+        }
+
+        public UsuarioModel ObterUsuarioPorNome(string nome)
+        {
+            var usuario = UsuariosConectados.FirstOrDefault(u => u.Nome == nome);
+
+            return usuario;
+        }
+
+        public ConversaModel Enviar(string remetente, string destinatario, string mensagem)
+        {
+            var usuario = UsuariosConectados.FirstOrDefault(u => u.Nome == remetente);
+            if (usuario!=null)
+            {
+                var conversa = usuario.Conversas.FirstOrDefault(conversaSalva => conversaSalva.Destinatario.Nome == destinatario);
+                if (conversa != null)
+                {
+                    conversa.Mensagens.Add(new MensagemModel { Texto = mensagem, DataEnvio = DateTime.Now });
+                }
+                else
+                {
+                    conversa = new ConversaModel()
+                    {
+                        Destinatario = new UsuarioModel { Nome = destinatario },
+                        Remetente = new UsuarioModel { Nome = remetente }
+                    };
+                    conversa.Mensagens.Add(new MensagemModel { Texto = mensagem, DataEnvio = DateTime.Now, Conversa = conversa });
+                    usuario.Conversas.Add(conversa);
+                }
+                return conversa;
+            }
+            else
+            {
+                throw new Exception("Usuario não encontrado");
+            }
+
         }
 
     }

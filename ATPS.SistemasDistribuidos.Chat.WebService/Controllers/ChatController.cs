@@ -19,16 +19,17 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.Controllers
     {
         //
         // GET: /Chat/
-        
-        public HttpResponseMessage Get(string remetente, string destinatario)
+
+        public HttpResponseMessage Get(string remetente)
         {
 
             if (HttpContext.Current.IsWebSocketRequest || HttpContext.Current.IsWebSocketRequestUpgrading)
             {
-                HttpContext.Current.AcceptWebSocketRequest(new WebSockets(remetente, destinatario));
+                var instancia = new WebSockets(remetente);
+                HttpContext.Current.AcceptWebSocketRequest(instancia);
             };
 
-           return  new HttpResponseMessage(HttpStatusCode.SwitchingProtocols);
+            return new HttpResponseMessage(HttpStatusCode.SwitchingProtocols);
         }
 
     }

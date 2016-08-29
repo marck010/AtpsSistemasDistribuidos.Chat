@@ -10,15 +10,19 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
 {
     public class WebSockets : WebSocketHandler
     {
-        private readonly WebSocketCollection webSocketClient = new WebSocketCollection();
         string nomeRemetente;
-        string nomeDestinatario;
+        string chave;
+        private static WebSocketCollection webSocketClient;
 
-        public WebSockets(string remetente, string destinatario)
+        public WebSockets(string remetente)
         {
-            nomeRemetente = remetente;
-            nomeDestinatario = destinatario;
+            nomeRemetente = remetente; 
+            if (webSocketClient == null)
+            {
+                webSocketClient = new WebSocketCollection();
+            }
         }
+
         public override void OnOpen()
         {
             JsonSerializerSettings settings = new JsonSerializerSettings
@@ -26,12 +30,34 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             };
 
+            chave = WebSocketContext.SecWebSocketKey;
+
+            ChatEnvio.Instancia.ConectarUsuario(nomeRemetente, chave);
+
             webSocketClient.Add(this);
 
-            var mensagem = ChatEnvio.Instancia.Enviar(nomeRemetente, nomeDestinatario, nomeRemetente + " acabou de entrar.");
-            var json = JsonConvert.SerializeObject(mensagem, settings);
+            foreach (var cliente in webSocketClient)
+            {
+                var chaveCliente = cliente.WebSocketContext.SecWebSocketKey;
 
-            webSocketClient.Broadcast(json);
+                var destinatario = ChatEnvio.Instancia.ObterUsuarioPorChave(chaveCliente);
+                if (destinatario ==null)
+                {
+                    continue;
+                }
+                var mensagem = ChatEnvio.Instancia.Enviar(nomeRemetente, destinatario.Nome, nomeRemetente + " acabou de entrar.");
+
+                var json = JsonConvert.SerializeObject(mensagem, settings);
+
+                if (cliente.WebSocketContext.SecWebSocketKey == this.WebSocketContext.SecWebSocketKey)
+                {
+                    webSocketClient.Broadcast(json);
+                }
+                else
+                {
+                    cliente.Send(json);
+                }
+            }
         }
 
         public override void OnError()
@@ -46,9 +72,24 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
             {
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             };
+
+            var nomeDestinatario = HttpContext.Current.Request.QueryString.Get("destinatario");
+
+            var destinatario = ChatEnvio.Instancia.ObterUsuarioPorNome(nomeDestinatario);
+            var clienteDestino = webSocketClient.FirstOrDefault(x => x.WebSocketContext.SecWebSocketKey == destinatario.ChaveConexao);
+
             var mensagem = ChatEnvio.Instancia.Enviar(nomeRemetente, nomeDestinatario, message);
+
             var json = JsonConvert.SerializeObject(mensagem, settings);
-            webSocketClient.Broadcast(json);
+
+            if (clienteDestino.WebSocketContext.SecWebSocketKey == this.WebSocketContext.SecWebSocketKey)
+            {
+                webSocketClient.Broadcast(json);
+            }
+            else
+            {
+                clienteDestino.Send(json);
+            }
         }
 
         public override void OnClose()

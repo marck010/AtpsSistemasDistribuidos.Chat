@@ -9,7 +9,6 @@
     float: left;
     overflow: hidden;
     width: 100%;
-    border-bottom: 3px solid #73AD21;
 }
 
 .principal-container {
@@ -29,7 +28,6 @@
     margin: 2px;
     padding: 2px;
     float: left;
-    border: 3px solid #73AD21;
     height: 686PX;
     width: calc(30% - 14px);
     background-color: #cfe4b3;
@@ -58,7 +56,6 @@
     margin: 2px;
     padding: 2px;
     float: left;
-    border: 3px solid #73AD21;
     height: 686px;
     width: calc(70% - 14px);
     background-color: #cfe4b3;
@@ -66,7 +63,6 @@
 }
 .mensagens {
     overflow: hidden;
-    border-bottom: 3px solid #73AD21;
     height: calc(90% - 14px);
     width: 100%;
     border-radius: 1px;
@@ -80,10 +76,9 @@
 
 .view-mensagens .field-groups .field-form {
     overflow: hidden;
-    width: 80%;
+    width: 79%;
     padding: 3px;
     height: 25px;
-    border: 1px solid #111;
     margin: 5px 20px 10px 20px;
     border-radius: 5px;
 }
@@ -121,10 +116,15 @@
     border-radius: 5px;
 }
 
-    .field-groups .field-form select {
-        height: 31px;
+    .view-mensagens .field-form textarea {
+        border-radius:3px;
+        border: 1px solid #111;
+        width: 76%;
     }
-
+    
+  .view-mensagens .field-form input {
+        width: 20%;
+    }
 
 .botoes-acao {
     float: right;
