@@ -48,7 +48,7 @@ moduloChat.factory('$webSocket', function () {
         }
 
         var raizAplicacao = "ws://localhost:6100/api/";
-        webSockets = new WebSocket(raizAplicacao + "Chat?Remetente=" + remetente)
+        webSockets = new WebSocket(raizAplicacao + "Chat?Remetente=" + remetente);
     }
 
     return {
@@ -57,14 +57,14 @@ moduloChat.factory('$webSocket', function () {
         OnError: OnError,
         OnMessage: OnMessage,
         OnClose: OnClose,
-        Enviar: Enviar,
+        Enviar: Enviar
     }
-})
+});
 
 moduloChat.controller('ChatController', function ($scope, $http, $webSocket) {
 
     $scope.Chat = {};
-    $scope.Chat.Conversas = [];
+    $scope.Chat.Conversas = [{ Destinatario: { Nome: "Marcos" }, Remetente: { Remetente: { Nome: "Nome" } } }];
     $scope.Chat.Remetente = {};
     $scope.Chat.Destinatario = {};
     $scope.Chat.MensagensDestinatario = [];
@@ -97,6 +97,7 @@ moduloChat.controller('ChatController', function ($scope, $http, $webSocket) {
 
         $webSocket.OnOpen(function () {
             $scope.Chat.Status = "Conectado";
+            $scope.Chat.Conectado = true;
             $scope.Chat.MensagemStatus = "Desconectar";
         });
 

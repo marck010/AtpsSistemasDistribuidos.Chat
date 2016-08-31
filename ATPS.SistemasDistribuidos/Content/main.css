@@ -14,24 +14,23 @@
 .principal-container {
     width: 100%;
     overflow: hidden;
-    height: 700px;
+    height: 980px;
+    background: rgba(200, 200, 200, 0.19);
 }
 
 .view-content {
     margin: auto;
     width: 70%;
     overflow: hidden;
-    height: 700px;
+    height: 980px;
 }
 
 .view-lateral {
-    margin: 2px;
-    padding: 2px;
     float: left;
-    height: 686PX;
+    height: 978px;
     width: calc(30% - 14px);
-    background-color: #cfe4b3;
-    border-radius: 1px;
+    background-color: rgba(121, 128, 121, 0.19);
+    border-radius: 15px 0 0 15px;
 }
 
 .view-conversas {
@@ -42,25 +41,35 @@
 }
 
     .view-conversas .conversa {
-        width: 100%;
-        background-color: #eee;
-        border: solid 1px;
+        width: calc(100% - 14px);
+        background: linear-gradient(to right, #d0d4d0,rgb(239, 239, 239));
         cursor: pointer;
+        border-bottom: 1px solid #ccc7c7;
+        border-top: 1px solid #ccc7c7;
+        border-left: 3px solid #b5bbb8;
+        height: 50px;
+        margin: 5px 0px 5px 5px;
+        border-radius: 5px 0 0 5px;
+        padding: 2px 0 4px 4px;
     }
+
+        .view-conversas .conversa:hover {
+            background: rgba(173, 173, 173, 0.28);
+        }
 
 .field-groups {
     overflow: hidden;
 }
 
 .view-mensagens {
-    margin: 2px;
-    padding: 2px;
     float: left;
-    height: 686px;
+    height: 978px;
     width: calc(70% - 14px);
-    background-color: #cfe4b3;
+    background-color: rgba(184, 185, 197, 0.19);
     border-radius: 1px;
+    border-right: 1px solid #ccc7c7;
 }
+
 .mensagens {
     overflow: hidden;
     height: calc(90% - 14px);
@@ -69,9 +78,10 @@
 }
 
 .view-mensagens .envio {
-    width: 100%;
+    width: 90%;
     height: calc(10% - 16px);
     overflow: hidden;
+    margin: 0 auto;
 }
 
 .view-mensagens .field-groups .field-form {
@@ -96,19 +106,12 @@
 }
 
 .field-groups div {
-    width: 50%;
-    height: auto;
-    float: left;
     overflow: hidden;
-}
-
-.field-groups label {
-    margin: 5px 20px 10px 20px;
+    text-align: center;
 }
 
 .field-groups .field-form {
-    overflow: hidden;
-    width: 50%;
+    width: 90%;
     padding: 3px;
     height: 25px;
     border: 1px solid #111;
@@ -116,35 +119,38 @@
     border-radius: 5px;
 }
 
-    .view-mensagens .field-form textarea {
-        border-radius:3px;
-        border: 1px solid #111;
-        width: 76%;
-    }
-    
-  .view-mensagens .field-form input {
-        width: 20%;
-    }
+.field-groups .botao-cadastrar {
+    text-align: center;
+    width: 100px;
+    height: 35px;
+    border-radius: 7px;
+    border: 1px solid #a09999;
+}
 
-.botoes-acao {
+.view-mensagens .field-form textarea {
+    border-radius: 7px;
+    height: 40px;
+    border: 0;
+    width: 76%;
+}
+
+.view-mensagens .field-form input {
+    width: 20%;
+}
+
+.view-mensagens .botao-enviar {
     float: right;
     overflow: hidden;
     height: auto;
-    width: 200px;
-    margin-top: 15px;
+    height: 40px;
+    border-radius: 3px;
+    border: 1px solid #111;
+    cursor: pointer;
 }
 
-    .botoes-acao input {
-        width: 70px;
-        height: 40px;
-        border-radius: 3px;
-        border: 1px solid #111;
-        cursor: pointer;
-    }
-
-        .botoes-acao input:hover {
-            background-color: #eee;
-        }
+.view-mensagens .botoes-acao:hover {
+    background-color: #eee;
+}
 
 footer {
     margin: 0;
