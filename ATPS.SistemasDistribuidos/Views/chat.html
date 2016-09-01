@@ -11,34 +11,39 @@
             <div class="view-lateral">
                 <br />
                 <div class="cabecalho">
-           
                     <div class="field-groups">
                         <div class="status-conexao">
                             <label>Status Conexão:{{Chat.Status}}</label>
                         </div>
+                        <br />
+                        <br />
                         <div>
-                            <label>Entre con seu </label>
-                            <input class="field-form"  type="text" ng-model="Chat.Remetente.Nome" />
-                        </div >
+                            <label>Nome </label>
+                            <input class="field-form" type="text" ng-model="Chat.Remetente.Nome" />
+                        </div>
+
                         <div>
                             <input class="botao-cadastrar" type="button" value="Cadastrar" ng-click="Chat.ConectarDesconectar()" />
                         </div>
                     </div>
                 </div>
                 <div class="view-conversas">
-                    <div style="" class="conversa" ng-repeat="conversa in Chat.Conversas" ng-click="Chat.SelecionarDestinatario(conversa)">
-                        <span>{{conversa.Destinatario.Nome}}</span>
+                    <div ng-class="{conversa: !conversa.Selecionada, 'conversa-selecionada': !!conversa.Selecionada}" ng-model="Chat.Conversas" ng-repeat="conversa in Chat.Conversas" ng-click="Chat.SelecionarDestinatario(conversa)">
+                        <div class="foto" >
+                            <img src="{{conversa.Remetente.Foto}}"/>
+                        </div>
+                        <span ng-model="conversa.Remetente.Nome">{{conversa.Remetente.Nome}}</span>
                     </div>
                 </div>
             </div>
             <div class="view-mensagens">
                 <div class="mensagens">
-                    <div ng-repeat="mensagem in Chat.MensagensDestinatario">
-                        <span>{{Chat.Destinatario.Nome}} : {{mensagem.Texto}}</span>
+
+                    <div ng-repeat="mensagem in Chat.MensagensDestinatario" ng-model="Chat.MensagensDestinatario">
+                        <span ng-model="mensagem.Texto">{{Chat.Conversa.Remetente.Nome}} : {{mensagem.Texto}}</span>
                     </div>
                 </div>
-                <!--ng-show="Chat.Conectado"-->
-                <div class="envio field-form" >
+                <div class="envio field-form" ng-show="Chat.Conectado">
                     <textarea ng-model="Chat.Destinatario.Mensagem" row="50"></textarea>
                     <input class="botao-enviar" type="button" ng-click="Chat.Remetente.Enviar()" value="Enviar" />
                 </div>

@@ -1,4 +1,5 @@
-﻿using Microsoft.Web.WebSockets;
+﻿using ATPS.SistemasDistribuidos.Chat.WebService.Models;
+using Microsoft.Web.WebSockets;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
 
         public WebSockets(string remetente)
         {
-            nomeRemetente = remetente; 
+            nomeRemetente = remetente;
             if (webSocketClient == null)
             {
                 webSocketClient = new WebSocketCollection();
@@ -35,29 +36,31 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
             ChatEnvio.Instancia.ConectarUsuario(nomeRemetente, chave);
 
             webSocketClient.Add(this);
+            var conversas = new List<ConversaModel>();
 
             foreach (var cliente in webSocketClient)
             {
                 var chaveCliente = cliente.WebSocketContext.SecWebSocketKey;
 
                 var destinatario = ChatEnvio.Instancia.ObterUsuarioPorChave(chaveCliente);
-                if (destinatario ==null)
+                if (destinatario == null)
                 {
                     continue;
                 }
-                var mensagem = ChatEnvio.Instancia.Enviar(nomeRemetente, destinatario.Nome, nomeRemetente + " acabou de entrar.");
+                var conversa = ChatEnvio.Instancia.Enviar(nomeRemetente, destinatario.Nome, "Acabou de entrar.");
+                var json = JsonConvert.SerializeObject(new { Conversas = new List<ConversaModel> { conversa } }, settings);
 
-                var json = JsonConvert.SerializeObject(mensagem, settings);
-
-                if (cliente.WebSocketContext.SecWebSocketKey == this.WebSocketContext.SecWebSocketKey)
-                {
-                    webSocketClient.Broadcast(json);
-                }
-                else
+                if (cliente.WebSocketContext.SecWebSocketKey != this.WebSocketContext.SecWebSocketKey)
                 {
                     cliente.Send(json);
+                    conversa.Remetente.Nome = destinatario.Nome;
+                    conversa.Destinatario.Nome = nomeRemetente;
+                    conversas.Add(conversa);
                 }
             }
+
+            var responstaParaNovoUsuario = JsonConvert.SerializeObject(new { Conversas = conversas }, settings);
+            webSocketClient.Broadcast(responstaParaNovoUsuario);
         }
 
         public override void OnError()
@@ -73,14 +76,17 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             };
 
-            var nomeDestinatario = HttpContext.Current.Request.QueryString.Get("destinatario");
+            var mensagem = JsonConvert.DeserializeObject<MensagemModel>(message, settings);
+
+            var nomeDestinatario = mensagem.Conversa.Destinatario.Nome;
+            //var nomeDestinatario = HttpContext.Current.Request.QueryString.Get("destinatario");
 
             var destinatario = ChatEnvio.Instancia.ObterUsuarioPorNome(nomeDestinatario);
             var clienteDestino = webSocketClient.FirstOrDefault(x => x.WebSocketContext.SecWebSocketKey == destinatario.ChaveConexao);
 
-            var mensagem = ChatEnvio.Instancia.Enviar(nomeRemetente, nomeDestinatario, message);
+            var conversa = ChatEnvio.Instancia.Enviar(nomeRemetente, nomeDestinatario, mensagem.Texto);
 
-            var json = JsonConvert.SerializeObject(mensagem, settings);
+            var json = JsonConvert.SerializeObject(new { Conversas = new List<ConversaModel> { conversa } }, settings);
 
             if (clienteDestino.WebSocketContext.SecWebSocketKey == this.WebSocketContext.SecWebSocketKey)
             {
@@ -88,6 +94,7 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
             }
             else
             {
+                webSocketClient.Broadcast(json);
                 clienteDestino.Send(json);
             }
         }

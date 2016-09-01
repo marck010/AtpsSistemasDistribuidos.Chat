@@ -42,20 +42,42 @@
 
     .view-conversas .conversa {
         width: calc(100% - 14px);
-        background: linear-gradient(to right, #d0d4d0,rgb(239, 239, 239));
+        background: rgb(202, 202, 193);
         cursor: pointer;
         border-bottom: 1px solid #ccc7c7;
-        border-top: 1px solid #ccc7c7;
+        border-top: 1px solid #a09e9e;
         border-left: 3px solid #b5bbb8;
         height: 50px;
         margin: 5px 0px 5px 5px;
         border-radius: 5px 0 0 5px;
+        padding: 2px 2px 2px 5px;
+    }
+
+    .view-conversas .conversa-selecionada {
+        width: calc(100% - 12px);
+        background: linear-gradient(to right, #d0d4d0,rgb(234, 234, 236));
+        cursor: pointer;
+        /* border-bottom: 1px solid #ccc7c7; */
+        /* border-top: 1px solid #aba9a9; */
+        border-left: 3px solid #bfbebe;
+        height: 50px;
+        margin: 5px 0px 5px 5px;
+        border-radius: 9px 0 0 0;
         padding: 2px 0 4px 4px;
     }
 
-        .view-conversas .conversa:hover {
-            background: rgba(173, 173, 173, 0.28);
-        }
+    .view-conversas .foto {
+        height: 45px;
+        width: 15%;
+        margin: 1px;
+        border: 1px solid #afabab;
+        border-radius: 5px 0px 0px 0px;
+        float: left;
+    }
+
+    .view-conversas .conversa:hover {
+        background: rgba(173, 173, 173, 0.28);
+    }
 
 .field-groups {
     overflow: hidden;
@@ -125,6 +147,7 @@
     height: 35px;
     border-radius: 7px;
     border: 1px solid #a09999;
+    cursor: pointer;
 }
 
 .view-mensagens .field-form textarea {

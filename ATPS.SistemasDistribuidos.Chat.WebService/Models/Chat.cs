@@ -68,7 +68,7 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.Models
             var usuario = UsuariosConectados.FirstOrDefault(u => u.Nome == remetente);
             if (usuario!=null)
             {
-                var conversa = usuario.Conversas.FirstOrDefault(conversaSalva => conversaSalva.Destinatario.Nome == destinatario);
+                var conversa = usuario.Conversas.FirstOrDefault(conversaSalva => conversaSalva.Destinatario.Nome == destinatario && conversaSalva.Remetente.Nome == remetente);
                 if (conversa != null)
                 {
                     conversa.Mensagens.Add(new MensagemModel { Texto = mensagem, DataEnvio = DateTime.Now });

@@ -29,11 +29,11 @@ moduloChat.factory('$webSocket', function () {
         webSockets.onclose = onClose;
     };
 
-    var Enviar = function (destinatario, mensagem) {
-        webSockets.upgradeReq.url + "&destinatario=" + destinatario;
+    var Enviar = function (destinatario,  mensagem) {
 
         if (ConexaoAberta()) {
-            webSockets.send(mensagem);
+            webSockets.send("{Conversa:{Destinatario:{Nome:'" + destinatario
+                + "'}}, Texto:'" + mensagem + "'}");
         }
     }
 
@@ -64,7 +64,7 @@ moduloChat.factory('$webSocket', function () {
 moduloChat.controller('ChatController', function ($scope, $http, $webSocket) {
 
     $scope.Chat = {};
-    $scope.Chat.Conversas = [{ Destinatario: { Nome: "Marcos" }, Remetente: { Remetente: { Nome: "Nome" } } }];
+    $scope.Chat.Conversas = [/*{ Destinatario: { Nome: "Marcos" }, Remetente: { Nome: "Nome" } }*/];
     $scope.Chat.Remetente = {};
     $scope.Chat.Destinatario = {};
     $scope.Chat.MensagensDestinatario = [];
@@ -76,20 +76,28 @@ moduloChat.controller('ChatController', function ($scope, $http, $webSocket) {
         $webSocket.Conectar($scope.Chat.Remetente.Nome);
 
         $webSocket.OnMessage(function (mensagem) {
-            var conversa = JSON.parse(mensagem.data);
-
+            var retorno = JSON.parse(mensagem.data);
+            console.log(retorno);
             if ($scope.Chat.Conversas.length == 0) {
-                $scope.Chat.Conversas.push(conversa);
+                Enumerable.From(retorno.Conversas).ForEach(function (conversa) {
+                    $scope.Chat.Conversas.push(conversa);
+                    $scope.$apply();
+                });
             } else {
+                Enumerable.From(retorno.Conversas).ForEach(function (conversa) {
+                    var conversaExistente = Enumerable.From($scope.Chat.Conversas).FirstOrDefault(null, function (item) {
+                        return conversa.Destinatario.Nome == item.Destinatario.Nome && conversa.Remetente.Nome == item.Remetente.Nome
+                    });
 
-                Enumerable.From($scope.Chat.Conversas).ForEach(function (item) {
-                    if (conversa.Destinatario.Nome == item.Destinatario.Nome && conversa.Remetente.Nome == item.Remetente.Nome) {
-                        item.Mensagens = conversa.Mensagens;
+                    if (conversaExistente) {
+                        conversaExistente.Mensagens = conversa.Mensagens;
                         if (conversa.Destinatario.Nome == $scope.Chat.Destinatario.Nome && conversa.Remetente.Nome == $scope.Chat.Remetente.Nome) {
                             $scope.Chat.MensagensDestinatario = conversa.Mensagens;
+                            $scope.$apply();
                         }
                     } else {
                         $scope.Chat.Conversas.push(conversa);
+                        $scope.$apply();
                     }
                 });
             }
@@ -99,17 +107,26 @@ moduloChat.controller('ChatController', function ($scope, $http, $webSocket) {
             $scope.Chat.Status = "Conectado";
             $scope.Chat.Conectado = true;
             $scope.Chat.MensagemStatus = "Desconectar";
+            $scope.$apply();
         });
 
-        $webSocket.OnOpen(function () {
-            $scope.Chat.Status = "Conectado";
-            $scope.Chat.MensagemStatus = "Desconectar";
+        $webSocket.OnError(function (e) {
+            alert(e.data);
         });
     };
 
     $scope.Chat.SelecionarDestinatario = function (conversa) {
+        Enumerable.From($scope.Chat.Conversas).Where(function (con) {
+            return con.Selecionada;
+        }).ForEach(function (con) {
+            con.Selecionada = false;
+        });
+
+        conversa.Selecionada = true;
+        $scope.Chat.Conversa = conversa;
         $scope.Chat.Destinatario = conversa.Destinatario;
         $scope.Chat.MensagensDestinatario = conversa.Mensagens;
+
     };
 
     $scope.Chat.Remetente.Enviar = function () {
