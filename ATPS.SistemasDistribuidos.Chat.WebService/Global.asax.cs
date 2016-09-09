@@ -1,4 +1,7 @@
-﻿using System;
+﻿using ATPS.SistemasDistribuidos.Chat.Dependencias;
+using ATPS.SistemasDistribuidos.Chat.IOC;
+using ATPS.SistemasDistribuidos.Dominio.IOC;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -20,8 +23,12 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService
 
             WebApiConfig.Register(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
-            BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            var injetorDependencia = InjetorDependencia.Instancia;
+
+            ResolvedorDependencia.Instancia.Configurar(injetorDependencia);
+            ResolvedorDependenciaDominio.Instancia.Configurar(injetorDependencia);
+
         }
     }
 }

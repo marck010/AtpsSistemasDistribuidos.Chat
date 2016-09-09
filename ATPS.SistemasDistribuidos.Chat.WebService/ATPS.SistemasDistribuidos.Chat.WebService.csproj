@@ -121,19 +121,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
-    <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="App_Start\WebSocketsConfiguracao\WebSockets.cs" />
     <Compile Include="Controllers\ChatController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Chat.cs" />
-    <Compile Include="Models\ConversaModel.cs" />
-    <Compile Include="Models\MensagemModel.cs" />
-    <Compile Include="Models\UsuarioModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -201,7 +195,20 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\ATPS.SistemasDistribuidos.Chat.Dependencias\ATPS.SistemasDistribuidos.Chat.Dependencias.csproj">
+      <Project>{e94dabf6-9a40-4ac2-8207-8652ee287dc4}</Project>
+      <Name>ATPS.SistemasDistribuidos.Chat.Dependencias</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ATPS.SistemasDistribuidos.Chat.Dominio\ATPS.SistemasDistribuidos.Chat.Dominio.csproj">
+      <Project>{1a8aaad6-0495-4171-95b4-4e6cc0309d77}</Project>
+      <Name>ATPS.SistemasDistribuidos.Chat.Dominio</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ATPS.SistemasDistribuidos.Chat.IOC\ATPS.SistemasDistribuidos.Chat.IOC.csproj">
+      <Project>{a2fcaa1d-ce1a-47f4-8c61-cdf412602a5d}</Project>
+      <Name>ATPS.SistemasDistribuidos.Chat.IOC</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
