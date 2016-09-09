@@ -29,11 +29,10 @@ moduloChat.factory('$webSocket', function () {
         webSockets.onclose = onClose;
     };
 
-    var Enviar = function (destinatario,  mensagem) {
+    var Enviar = function (destinatario,  mensagem, identificador) {
 
         if (ConexaoAberta()) {
-            webSockets.send("{Conversa:{Destinatario:{Nome:'" + destinatario
-                + "'}}, Texto:'" + mensagem + "'}");
+            webSockets.send(" {Conversa:{Identificador:'" + identificador + "'}, Destinatario:{Nome:'" + destinatario + "'}, Texto:'" + mensagem + "'}");
         }
     }
 
@@ -86,17 +85,17 @@ moduloChat.controller('ChatController', function ($scope, $http, $webSocket) {
             } else {
                 Enumerable.From(retorno.Conversas).ForEach(function (conversa) {
                     var conversaExistente = Enumerable.From($scope.Chat.Conversas).FirstOrDefault(null, function (item) {
-                        return conversa.Destinatario.Nome == item.Destinatario.Nome && conversa.Remetente.Nome == item.Remetente.Nome
+                        return conversa.Remetente.Nome == item.Remetente.Nome
                     });
 
                     if (conversaExistente) {
                         conversaExistente.Mensagens = conversa.Mensagens;
-                        if (conversa.Destinatario.Nome == $scope.Chat.Destinatario.Nome && conversa.Remetente.Nome == $scope.Chat.Remetente.Nome) {
-                            $scope.Chat.MensagensDestinatario = conversa.Mensagens;
+                        if (conversaExistente.Selecionada) {
+                            $scope.Chat.MensagensDestinatario = conversaExistente.Mensagens;
                             $scope.$apply();
                         }
                     } else {
-                        $scope.Chat.Conversas.push(conversa);
+                        $scope.Chat.Conversas.push(conversaExistente);
                         $scope.$apply();
                     }
                 });
@@ -116,15 +115,16 @@ moduloChat.controller('ChatController', function ($scope, $http, $webSocket) {
     };
 
     $scope.Chat.SelecionarDestinatario = function (conversa) {
+        
         Enumerable.From($scope.Chat.Conversas).Where(function (con) {
-            return con.Selecionada;
+            return !!con.Selecionada;
         }).ForEach(function (con) {
             con.Selecionada = false;
         });
 
         conversa.Selecionada = true;
         $scope.Chat.Conversa = conversa;
-        $scope.Chat.Destinatario = conversa.Destinatario;
+        $scope.Chat.Destinatario = conversa.Remetente;
         $scope.Chat.MensagensDestinatario = conversa.Mensagens;
 
     };
@@ -135,7 +135,9 @@ moduloChat.controller('ChatController', function ($scope, $http, $webSocket) {
             return;
         }
         if ($scope.Chat.Destinatario.Mensagem) {
-            $webSocket.Enviar($scope.Chat.Destinatario.Nome, $scope.Chat.Destinatario.Mensagem);
+            $webSocket.Enviar($scope.Chat.Destinatario.Nome, $scope.Chat.Destinatario.Mensagem, $scope.Chat.Conversa.Identificador);
+            $scope.Chat.MensagensDestinatario.push({ Texto: $scope.Chat.Destinatario.Mensagem, Remetente: $scope.Chat.Remetente });
+            $scope.Chat.Destinatario.Mensagem = '';
         }
     };
 })

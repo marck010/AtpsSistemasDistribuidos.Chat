@@ -1,8 +1,13 @@
-﻿body {
+﻿html {
+    height: 100%;
+}
+
+body {
     margin: 0px;
     padding: 0px;
     background: white;
     font-family: "BankGothic Lt BT",Helvetica,Arial,sans-serif;
+    height: 100%;
 }
 
 .cabecalho {
@@ -14,24 +19,37 @@
 .principal-container {
     width: 100%;
     overflow: hidden;
-    height: 980px;
-    background: rgba(200, 200, 200, 0.19);
+    height: 100%;
+    background: #6b6f6b;
 }
 
 .view-content {
     margin: auto;
     width: 70%;
     overflow: hidden;
-    height: 980px;
+    height: calc(100% - 13px);
+    border: 1px solid rgba(245, 245, 245, 0.45);
+    /* border-radius: 13px 0; */
+    margin-top: 10px;
 }
 
 .view-lateral {
     float: left;
-    height: 978px;
+    height: 100%;
     width: calc(30% - 14px);
-    background-color: rgba(121, 128, 121, 0.19);
-    border-radius: 15px 0 0 15px;
+    background-color: #fff;
+    /* border-radius: 15px 0 0 15px; */
+    border-right: 1px solid #ececec;
 }
+
+    .view-lateral .box-cadastrar {
+        margin: 10px;
+        padding: 5px;
+        /* position: relative; */
+    }
+
+    .view-lateral .box-cadastrar {
+    }
 
 .view-conversas {
     width: 100%;
@@ -42,27 +60,27 @@
 
     .view-conversas .conversa {
         width: calc(100% - 14px);
-        background: rgb(202, 202, 193);
+        background: rgb(224, 224, 214);
         cursor: pointer;
         border-bottom: 1px solid #ccc7c7;
-        border-top: 1px solid #a09e9e;
+        border: 1px solid #a09e9e;
         border-left: 3px solid #b5bbb8;
         height: 50px;
         margin: 5px 0px 5px 5px;
-        border-radius: 5px 0 0 5px;
+        /* border-radius: 5px 0 0 5px; */
         padding: 2px 2px 2px 5px;
     }
 
     .view-conversas .conversa-selecionada {
         width: calc(100% - 12px);
-        background: linear-gradient(to right, #d0d4d0,rgb(234, 234, 236));
+        background: linear-gradient(to right, #e0e0d6,rgb(252, 252, 253));
         cursor: pointer;
-        /* border-bottom: 1px solid #ccc7c7; */
-        /* border-top: 1px solid #aba9a9; */
+        border-bottom: 1px solid #fffbfb;
+        border: 1px solid #aba9a9;
         border-left: 3px solid #bfbebe;
         height: 50px;
         margin: 5px 0px 5px 5px;
-        border-radius: 9px 0 0 0;
+        /* border-radius: 9px 0 0 0; */
         padding: 2px 0 4px 4px;
     }
 
@@ -85,24 +103,23 @@
 
 .view-mensagens {
     float: left;
-    height: 978px;
-    width: calc(70% - 14px);
-    background-color: rgba(184, 185, 197, 0.19);
-    border-radius: 1px;
-    border-right: 1px solid #ccc7c7;
+    height: 100%;
+    width: calc(70% - -11px);
+    background-color: #fff;
 }
 
 .mensagens {
     overflow: hidden;
-    height: calc(90% - 14px);
+    height: 89%;
     width: 100%;
     border-radius: 1px;
 }
+.view-mensagens .mensagens .mensagem {
+    background: #f6f5f5;
+}
 
 .view-mensagens .envio {
-    width: 90%;
-    height: calc(10% - 16px);
-    overflow: hidden;
+    width: 94%;
     margin: 0 auto;
 }
 
@@ -130,15 +147,19 @@
 .field-groups div {
     overflow: hidden;
     text-align: center;
+    left: 50%;
+    /* width: 80%; */
 }
 
 .field-groups .field-form {
     width: 90%;
     padding: 3px;
-    height: 25px;
-    border: 1px solid #111;
+    height: 34px;
+    border: 1px solid #ded2d2;
     margin: 5px 20px 10px 20px;
-    border-radius: 5px;
+    /* border-radius: 5px; */
+    font-size: 22px;
+    text-align: center;
 }
 
 .field-groups .botao-cadastrar {
@@ -151,24 +172,26 @@
 }
 
 .view-mensagens .field-form textarea {
-    border-radius: 7px;
-    height: 40px;
-    border: 0;
-    width: 76%;
+    /* border-radius: 7px; */
+    height: 71px;
+    border: 1px solid #b1a5a5;
+    width: 85%;
 }
 
 .view-mensagens .field-form input {
-    width: 20%;
+    width: 12%;
+    right: 47%;
 }
 
 .view-mensagens .botao-enviar {
     float: right;
     overflow: hidden;
     height: auto;
-    height: 40px;
-    border-radius: 3px;
-    border: 1px solid #111;
+    height: 76px;
+    /* border-radius: 62px; */
+    border: 1px solid #c7c4c4;
     cursor: pointer;
+    background: #ebeaea;
 }
 
 .view-mensagens .botoes-acao:hover {
