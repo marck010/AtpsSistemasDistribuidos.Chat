@@ -40,7 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entidades\Conversa.cs" />
-    <Compile Include="Entidades\IEntidadeBase.cs" />
+    <Compile Include="Entidades\EntidadeBase.cs" />
     <Compile Include="Entidades\Mensagem.cs" />
     <Compile Include="Entidades\Usuario.cs" />
     <Compile Include="Interfaces\Repositorios\IRepositorioBaseIntegrador.cs" />
