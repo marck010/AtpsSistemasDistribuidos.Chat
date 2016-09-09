@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" GroupingSetting="Access" MembersFormat="NameAndType">
+  <Class Name="ATPS.SistemasDistribuidos.Chat.Dominio.Entidades.Conversa">
+    <Position X="0.5" Y="2.25" Width="2.5" />
+    <Members>
+      <Method Name="Conversa" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAggAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entidades\Conversa.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ATPS.SistemasDistribuidos.Chat.Dominio.Entidades.Mensagem">
+    <Position X="4.25" Y="2.25" Width="2.5" />
+    <InheritanceLine Type="ATPS.SistemasDistribuidos.Chat.Dominio.Entidades.EntidadeBase" FixedToPoint="true">
+      <Path>
+        <Point X="5.5" Y="1.603" />
+        <Point X="5.5" Y="2.25" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAABAAgAAgAAAAAAAAQAAABQAABAAAAAAAAAAAQAA=</HashCode>
+      <FileName>Entidades\Mensagem.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Conversa" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="ATPS.SistemasDistribuidos.Chat.Dominio.Entidades.Usuario">
+    <Position X="7.5" Y="2.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAQAEAAAA=</HashCode>
+      <FileName>Entidades\Usuario.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ATPS.SistemasDistribuidos.Chat.Dominio.Entidades.EntidadeBase">
+    <Position X="4.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entidades\IEntidadeBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
