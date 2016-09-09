@@ -1,9 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATPS.SistemasDistribuidos.Chat.Cliente", "ATPS.SistemasDistribuidos\ATPS.SistemasDistribuidos.Chat.Cliente.csproj", "{7AB45901-D505-4345-952A-0702A7D31561}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATPS.SistemasDistribuidos.Chat.WebService", "ATPS.SistemasDistribuidos.Chat.WebService\ATPS.SistemasDistribuidos.Chat.WebService.csproj", "{8465ECD5-25B3-4737-8F6D-4B9A50B72891}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATPS.SistemasDistribuidos.Chat.Cliente", "ATPS.SistemasDistribuidos.Chat.Cliente\ATPS.SistemasDistribuidos.Chat.Cliente.csproj", "{7AB45901-D505-4345-952A-0702A7D31561}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
