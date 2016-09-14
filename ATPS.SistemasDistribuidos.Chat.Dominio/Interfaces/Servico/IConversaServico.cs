@@ -11,6 +11,6 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
 {
     public interface IConversaServico
     {
-        Conversa Enviar(string remetente, string destinatario, string mensagem, Guid identificador);
+        Conversa Enviar(string remetente, string destinatario, string mensagem, Guid? identificador);
     }
 }

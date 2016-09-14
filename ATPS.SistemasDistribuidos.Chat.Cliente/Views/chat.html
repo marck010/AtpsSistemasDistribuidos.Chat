@@ -27,17 +27,17 @@
                     </div>
                 </div>
                 <div class="view-conversas">
-                    <div ng-class="{conversa: !conversa.Selecionada, 'conversa-selecionada': !!conversa.Selecionada}" ng-model="Chat.Conversas" ng-repeat="conversa in Chat.Conversas" ng-click="Chat.SelecionarDestinatario(conversa)">
+                    <div ng-class="{conversa: !usaurio.Selecionado, 'conversa-selecionada': !!usuario.Selecionado}" ng-model="Chat.Usuarios" ng-repeat="usuario in Chat.Usuarios" ng-click="Chat.SelecionarDestinatario(usuario)">
                         <div class="foto">
                             <img width="44px" height="44px"  src="http://www.chicletecombanana.com.br/2012/img/avatar_padrao.jpg" />
                         </div>
-                        <span ng-model="conversa.Remetente.Nome">{{conversa.Remetente.Nome}}</span>
+                        <span ng-model="usuario.Nome">{{usuario.Usuario.Nome}}</span>
                     </div>
                 </div>
             </div>
             <div class="view-mensagens">
                 <div class="mensagens">
-                    <div class="mensagem" ng-repeat="mensagem in Chat.MensagensDestinatario" ng-model="Chat.MensagensDestinatario">
+                    <div class="mensagem" ng-repeat="mensagem in Chat.Conversa.Mensagens">
                         <span ng-model="mensagem.Texto">{{mensagem.Remetente.Nome}} : {{mensagem.Texto}}</span>
                     </div>
                 </div>

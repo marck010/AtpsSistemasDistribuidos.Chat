@@ -10,6 +10,10 @@ namespace ATPS.SistemasDistribuidos.Chat.IOC
     public class Nucleo
     {
         private Dictionary<Type, Type> ListaDependencias { get; set; }
+        public Nucleo()
+        {
+            ListaDependencias = new Dictionary<Type, Type>();
+        }
 
         public void Registrar<TInterface, TEntidade>()
         {
@@ -25,23 +29,23 @@ namespace ATPS.SistemasDistribuidos.Chat.IOC
 
         public TInterface Resolver<TInterface>()
         {
-            if (!ItemExiste(typeof(TInterface)))
+            if (ItemExiste(typeof(TInterface)))
             {
                 var item = Obter(typeof(TInterface));
                 return (TInterface)Activator.CreateInstance(item.Value);
             }
 
-            throw new Exception("Não foi adicionada uma dependência para essa interface.");
+            throw new Exception(String.Format("Não foi adicionada uma dependência para a interface {0}.", typeof(TInterface).ToString()));
         }
 
         private KeyValuePair<Type, Type> Obter(Type @interface)
         {
-            return ListaDependencias.SingleOrDefault(x => x.Key == @interface.GetType());
+            return ListaDependencias.SingleOrDefault(x => x.Key == @interface);
         }
 
         private bool ItemExiste(Type item)
         {
-            return Obter(item).Equals(default(KeyValuePair<Type, Type>));
+            return !Obter(item).Equals(default(KeyValuePair<Type, Type>));
         }
     }
 }

@@ -7,6 +7,7 @@ using ATPS.SistemasDistribuidos.Chat.Persistencia.Repositorios;
 using ATPS.SistemasDistribuidos.Chat.Dominio.Interfaces.Repositorios;
 using ATPS.SistemasDistribuidos.Chat.Dominio.Entidades;
 using ATPS.SistemasDistribuidos.Chat.Dominio.Interfaces.IOC;
+using ATPS.SistemasDistribuidos.Dominio.Servicos;
 
 namespace ATPS.SistemasDistribuidos.Chat.IOC
 {
@@ -42,6 +43,8 @@ namespace ATPS.SistemasDistribuidos.Chat.IOC
             _nucleo.Registrar<IRepositorioUsuario, RepositorioUsuario>();
             _nucleo.Registrar<IRepositorioConversa, RepositorioConversa>();
             _nucleo.Registrar<IRepositorioBase, RepositorioBaseMemoria>();
+            _nucleo.Registrar<IConversaServico, ConversaServico>();
+            _nucleo.Registrar<IUsuarioServico, UsuarioServico>();
         }
 
         public T Resolver<T>()

@@ -11,32 +11,38 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
 {
     public class ConversaServico : IConversaServico
     {
-        private readonly UsuarioServico _servicoUsuario = ResolvedorDependenciaDominio.Instancia.Resolver<UsuarioServico>();
+        private readonly IUsuarioServico _servicoUsuario = ResolvedorDependenciaDominio.Instancia.Resolver<IUsuarioServico>();
         private readonly IRepositorioConversa _repositorioConversa = ResolvedorDependenciaDominio.Instancia.Resolver<IRepositorioConversa>();
 
-        public Conversa Enviar(string remetente, string destinatario, string mensagem, Guid identificador)
+        public Conversa Enviar(string remetente, string destinatario, string textoMensagem, Guid? identificador)
         {
             var usuario = _servicoUsuario.ObterPorNome(remetente);
 
             if (usuario != null)
             {
-                var conversa = _repositorioConversa.Obter(identificador);
-                var remetenteObj = _servicoUsuario.ObterPorNome(remetente);
-                var destinatarioObj = _servicoUsuario.ObterPorNome(destinatario);
-                
-                var mensagemObj = new Mensagem { Texto = mensagem, DataEnvio = DateTime.Now, Remetente = remetenteObj, Destinatario = destinatarioObj };
-               
+                var conversa = identificador!=null?_repositorioConversa.Obter(identificador):null;
+                var usuarioRemetente = _servicoUsuario.ObterPorNome(remetente);
+                var usuarioDestinatario = _servicoUsuario.ObterPorNome(destinatario);
+
+                var mensagem = new Mensagem
+                {
+                    Texto = textoMensagem,
+                    DataEnvio = DateTime.Now,
+                    Remetente = usuarioRemetente,
+                    Destinatario = usuarioDestinatario
+                };
+
                 if (conversa != null)
                 {
-                    conversa.Mensagens.Add(mensagemObj);
-                    _repositorioConversa.Inserir(conversa);
+                    conversa.Mensagens.Add(mensagem);
+                    _repositorioConversa.Atualizar(conversa);
                 }
                 else
                 {
-                    conversa = new Conversa(){Identificador = Guid.NewGuid()};
-                    conversa.Mensagens.Add(mensagemObj);
+                    conversa = new Conversa() { Identificador = Guid.NewGuid() };
+                    conversa.Mensagens.Add(mensagem);
                     usuario.Conversas.Add(conversa);
-                    _repositorioConversa.Atualizar(conversa);
+                    _repositorioConversa.Inserir(conversa);
                 }
                 return conversa;
             }

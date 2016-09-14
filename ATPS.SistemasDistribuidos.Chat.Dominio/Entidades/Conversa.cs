@@ -14,7 +14,33 @@ namespace ATPS.SistemasDistribuidos.Chat.Dominio.Entidades
 
         public override object Id { get { return Identificador; } }
 
-        public Guid Identificador { get; set; }
+        public Guid? Identificador { get; set; }
         public List<Mensagem> Mensagens { get; set; }
+
+        public Usuario UltimoRemetente
+        {
+            get
+            {
+                if (Mensagens.Any())
+                {
+                    return Mensagens.LastOrDefault().Remetente;
+                }
+                return null;
+            }
+        }
+       
+        public Usuario UltimoDestinatario
+        {
+            get
+            {
+                if (Mensagens.Any())
+                {
+                    return Mensagens.LastOrDefault().Remetente;
+                }
+                return null;
+            }
+        }
     }
+
 }
+

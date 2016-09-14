@@ -13,14 +13,23 @@ namespace ATPS.SistemasDistribuidos.Chat.Persistencia.Repositorios
     {
         private static List<EntidadeBase> Entidades { get; set; }
 
+        public RepositorioBaseMemoria()
+        {
+        }
+
+        static RepositorioBaseMemoria()
+        {
+            Entidades = new List<EntidadeBase>();
+        }
+
         public T Obter<T>(object id) where T : EntidadeBase
         {
-            return (T)Entidades.SingleOrDefault(x => x.Id == id);
+            return (T)Entidades.SingleOrDefault(x => x.GetType() == typeof(T) && id != null && x.Id.ToString() == id.ToString());
         }
 
         public IList<T> Todos<T>() where T : EntidadeBase
         {
-            return Entidades.Cast<T>().ToList();
+            return Entidades.Where(x=>x.GetType() == typeof(T)).Cast<T>().ToList();
         }
 
         public void Inserir<T>(T entidade) where T : EntidadeBase
@@ -29,7 +38,7 @@ namespace ATPS.SistemasDistribuidos.Chat.Persistencia.Repositorios
             {
                 if (entidade.Id == null)
                 {
-                    int ultimoId = Entidades.Max(x => (int)x.Id);
+                    int ultimoId = Entidades.Any() ? Todos<T>().Max(x => (int)x.Id) : 0;
                     entidade.Id = ++ultimoId;
                 }
                 Entidades.Add(entidade);
