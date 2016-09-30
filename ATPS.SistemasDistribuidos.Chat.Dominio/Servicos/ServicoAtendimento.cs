@@ -1,0 +1,50 @@
+﻿using ATPS.SistemasDistribuidos.Chat.Dominio.Entidades;
+using ATPS.SistemasDistribuidos.Chat.Dominio.Interfaces.Repositorios;
+using ATPS.SistemasDistribuidos.Dominio.IOC;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ATPS.SistemasDistribuidos.Dominio.Servicos
+{
+    public class ServicoAtendimento : IServicoAtendimento
+    {
+        private readonly IServicoUsuario _servicoUsuario = ResolvedorDependenciaDominio.Instancia.Resolver<IServicoUsuario>();
+        private readonly IServicoAtendente _servicoAtendente = ResolvedorDependenciaDominio.Instancia.Resolver<IServicoAtendente>();
+        private readonly IRepositorioAtendimento _repositorioConversa = ResolvedorDependenciaDominio.Instancia.Resolver<IRepositorioAtendimento>();
+
+        public Atendimento Enviar(string chaveAcessoRemetente, string loginDestinatario, string textoMensagem, int? idAtendimento)
+        {
+            var usuarioRemetente = _servicoUsuario.ObterPorChave(chaveAcessoRemetente);
+
+            if (usuarioRemetente != null)
+            {
+                var atendimento = idAtendimento != null ? _repositorioConversa.Obter(idAtendimento.Value) : null;
+                var usuarioDestinatario = _servicoUsuario.ObterPorLogin(loginDestinatario);
+
+                var mensagem = new Mensagem(textoMensagem, usuarioRemetente, usuarioDestinatario);
+
+                if (atendimento != null)
+                {
+                    atendimento.Mensagens.Add(mensagem);
+                    _repositorioConversa.Atualizar(atendimento);
+                }
+                else
+                {
+                    var atendente = _servicoAtendente.ObterPorChaveAcesso(chaveAcessoRemetente);
+                    atendimento = new Atendimento(usuarioDestinatario, atendente);
+                    atendimento.Mensagens.Add(mensagem);
+                    usuarioRemetente.Atendimentos.Add(atendimento);
+                    _repositorioConversa.Inserir(atendimento);
+                }
+                return atendimento;
+            }
+            else
+            {
+                throw new Exception("Usuario não encontrado");
+            }
+        }
+    }
+}

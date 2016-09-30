@@ -8,7 +8,7 @@ using ATPS.SistemasDistribuidos.Chat.Dominio.Interfaces.Repositorios;
 
 namespace ATPS.SistemasDistribuidos.Chat.Persistencia.Repositorios
 {
-    public class RepositorioConversa : RepositorioBaseIntegrador<Conversa>, IRepositorioConversa
+    public class RepositorioAtendimento : RepositorioBaseIntegrador<Atendimento>, IRepositorioAtendimento
     {
  
     }

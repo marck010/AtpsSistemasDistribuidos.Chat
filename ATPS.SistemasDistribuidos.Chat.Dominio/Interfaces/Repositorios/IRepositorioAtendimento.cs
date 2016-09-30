@@ -7,15 +7,7 @@ using System.Threading.Tasks;
 
 namespace ATPS.SistemasDistribuidos.Chat.Dominio.Interfaces.Repositorios
 {
-    public interface IRepositorioBaseIntegrador<T>
+    public interface IRepositorioAtendimento : IRepositorioBaseIntegrador<Atendimento>
     {
-        IList<T> Todos();
-        T Obter(int id);
-        void Inserir(T entidade);
-        void Atualizar(T entidade);
-        void Excluir(int id);
     }
 }
-
-
-

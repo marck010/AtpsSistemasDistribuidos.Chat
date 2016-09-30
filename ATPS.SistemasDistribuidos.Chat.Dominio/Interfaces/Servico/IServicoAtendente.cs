@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace ATPS.SistemasDistribuidos.Dominio.Servicos
 {
-    public interface IUsuarioServico
+    public interface IServicoAtendente
     {
-        Usuario ObterPorChave(string chave);
-        Usuario ObterPorNome(string nome);
-        void ConectarUsuario(string remetente, string chave);
+        Atendente ObterPorChaveAcesso(string chave);
+        Atendente Autenticar(string login, string senha);
+        Atendente Inserir(string nome, string email, string telefone, string login, string senha);
     }
 }

@@ -39,17 +39,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Repositorios\RepositorioSessaoWebSockets.cs" />
+    <Compile Include="Repositorios\RepositorioAtendente.cs" />
+    <Compile Include="Repositorios\RepositorioBaseSql.cs" />
     <Compile Include="Repositorios\RepositorioBase.cs" />
     <Compile Include="Repositorios\RepositorioBaseMemoria.cs" />
     <Compile Include="Repositorios\RepositorioUsuario.cs" />
-    <Compile Include="Repositorios\RepositorioConversa.cs" />
+    <Compile Include="Repositorios\RepositorioAtendimento.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ATPS.SistemasDistribuidos.Chat.Dependencias\ATPS.SistemasDistribuidos.Chat.Dependencias.csproj">
-      <Project>{e94dabf6-9a40-4ac2-8207-8652ee287dc4}</Project>
-      <Name>ATPS.SistemasDistribuidos.Chat.Dependencias</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ATPS.SistemasDistribuidos.Chat.Dominio\ATPS.SistemasDistribuidos.Chat.Dominio.csproj">
       <Project>{1a8aaad6-0495-4171-95b4-4e6cc0309d77}</Project>
       <Name>ATPS.SistemasDistribuidos.Chat.Dominio</Name>

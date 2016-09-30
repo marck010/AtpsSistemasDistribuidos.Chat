@@ -1,17 +1,23 @@
 ﻿using ATPS.SistemasDistribuidos.Chat.Dominio.Entidades;
+using ATPS.SistemasDistribuidos.Chat.Dominio.Interfaces.Repositorios;
+using ATPS.SistemasDistribuidos.Dominio.IOC;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ATPS.SistemasDistribuidos.Chat.Dominio.Interfaces.Repositorios
+namespace ATPS.SistemasDistribuidos.Dominio.Servicos
 {
-    public interface IRepositorioUsuario : IRepositorioBaseIntegrador<Usuario>
+    public interface IServicoUsuario
     {
         IList<Usuario> UsuariosAguardandoAtendimento();
+
         Usuario ObterPorChave(string chave);
         Usuario ObterPorLogin(string login);
         Usuario ObterPorNome(string nome);
+        
+        Usuario ConectarUsuario(string remetente, string chave);
+        Usuario Inserir(string nome, string email, string telefone);
     }
 }

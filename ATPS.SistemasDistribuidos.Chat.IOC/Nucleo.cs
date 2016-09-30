@@ -23,7 +23,7 @@ namespace ATPS.SistemasDistribuidos.Chat.IOC
             }
             else
             {
-                throw new Exception("Dependência já adicionada");
+                throw new Exception(String.Format("Dependência para a interface {0} já adicionada", typeof(TInterface).ToString()));
             }
         }
 

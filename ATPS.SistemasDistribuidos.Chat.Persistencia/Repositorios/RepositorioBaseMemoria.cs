@@ -12,6 +12,7 @@ namespace ATPS.SistemasDistribuidos.Chat.Persistencia.Repositorios
     public class RepositorioBaseMemoria : IRepositorioBase
     {
         private static List<EntidadeBase> Entidades { get; set; }
+        private static Type _tipoSendoSalvo;
 
         public RepositorioBaseMemoria()
         {
@@ -22,40 +23,60 @@ namespace ATPS.SistemasDistribuidos.Chat.Persistencia.Repositorios
             Entidades = new List<EntidadeBase>();
         }
 
-        public T Obter<T>(object id) where T : EntidadeBase
+        public T Obter<T>(int id) where T : EntidadeBase
         {
             return (T)Entidades.SingleOrDefault(x => x.GetType() == typeof(T) && id != null && x.Id.ToString() == id.ToString());
         }
 
         public IList<T> Todos<T>() where T : EntidadeBase
         {
-            return Entidades.Where(x=>x.GetType() == typeof(T)).Cast<T>().ToList();
+            return Entidades.Where(x => x.GetType() == typeof(T)).Cast<T>().ToList();
         }
 
         public void Inserir<T>(T entidade) where T : EntidadeBase
         {
-            if (!ItemExiste<T>(entidade.Id))
+            if (_tipoSendoSalvo != null && _tipoSendoSalvo.Name == typeof(T).Name)
             {
-                if (entidade.Id == null)
+                lock (_tipoSendoSalvo)
                 {
-                    int ultimoId = Entidades.Any() ? Todos<T>().Max(x => (int)x.Id) : 0;
+                    _tipoSendoSalvo = typeof(T);
+                    int ultimoId = AlgumItemSalvo<T>() ? Todos<T>().Max(x => (int)x.Id) : 0;
                     entidade.Id = ++ultimoId;
                 }
-                Entidades.Add(entidade);
             }
             else
             {
-                throw new Exception("Item com o mesmo identificador já inserido.");
+                _tipoSendoSalvo = typeof(T);
+
+                int ultimoId = AlgumItemSalvo<T>() ? Todos<T>().Max(x => (int)x.Id) : 0;
+                entidade.Id = ++ultimoId;
             }
+
+            Entidades.Add(entidade);
         }
 
         public void Atualizar<T>(T entidade) where T : EntidadeBase
         {
             if (ItemExiste<T>(entidade.Id))
             {
-                var entidadeSalva = Obter<T>(entidade.Id);
-                Entidades.Remove((T)entidadeSalva);
-                Entidades.Add((T)entidade);
+                if (_tipoSendoSalvo != null && _tipoSendoSalvo.Name == typeof(T).Name)
+                {
+                    lock (_tipoSendoSalvo)
+                    {
+                        _tipoSendoSalvo = typeof(T);
+                        var entidadeSalva = Obter<T>(entidade.Id);
+                        Entidades.Remove((T)entidadeSalva);
+                        Entidades.Add((T)entidade);
+                    }
+                }
+                else
+                {
+                    _tipoSendoSalvo = typeof(T);
+                    _tipoSendoSalvo = typeof(T);
+                    var entidadeSalva = Obter<T>(entidade.Id);
+                    Entidades.Remove((T)entidadeSalva);
+                    Entidades.Add((T)entidade);
+                }
             }
             else
             {
@@ -63,7 +84,7 @@ namespace ATPS.SistemasDistribuidos.Chat.Persistencia.Repositorios
             }
         }
 
-        public void Excluir<T>(object id) where T : EntidadeBase
+        public void Excluir<T>(int id) where T : EntidadeBase
         {
             if (ItemExiste<T>(id))
             {
@@ -76,9 +97,14 @@ namespace ATPS.SistemasDistribuidos.Chat.Persistencia.Repositorios
             }
         }
 
-        private bool ItemExiste<T>(object identificador) where T : EntidadeBase
+        private bool ItemExiste<T>(int id) where T : EntidadeBase
         {
-            return Obter<T>(identificador) != null;
+            return Obter<T>(id) != null;
+        }
+
+        private bool AlgumItemSalvo<T>() where T : EntidadeBase
+        {
+            return Todos<T>().Any();
         }
     }
 }

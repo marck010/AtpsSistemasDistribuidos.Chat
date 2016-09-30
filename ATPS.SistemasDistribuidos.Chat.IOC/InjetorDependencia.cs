@@ -40,11 +40,17 @@ namespace ATPS.SistemasDistribuidos.Chat.IOC
 
         public void Configurar()
         {
+            _nucleo.Registrar<IRepositorioAtendente, RepositorioAtendente>();
+            _nucleo.Registrar<IRepositorioAtendimento, RepositorioAtendimento>();
+            _nucleo.Registrar<IRepositorioSessaoWebSockets, RepositorioSessaoWebSockets>();
             _nucleo.Registrar<IRepositorioUsuario, RepositorioUsuario>();
-            _nucleo.Registrar<IRepositorioConversa, RepositorioConversa>();
+
             _nucleo.Registrar<IRepositorioBase, RepositorioBaseMemoria>();
-            _nucleo.Registrar<IConversaServico, ConversaServico>();
-            _nucleo.Registrar<IUsuarioServico, UsuarioServico>();
+
+            _nucleo.Registrar<IServicoAtendente, ServicoAtendente>();
+            _nucleo.Registrar<IServicoAtendimento, ServicoAtendimento>();
+            _nucleo.Registrar<IServicoSessaoWebSockets, ServicoSessaoWebSockets>();
+            _nucleo.Registrar<IServicoUsuario, ServicoUsuario>();
         }
 
         public T Resolver<T>()

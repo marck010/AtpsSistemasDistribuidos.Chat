@@ -39,27 +39,32 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entidades\Conversa.cs" />
+    <Compile Include="Entidades\Atendimento.cs" />
+    <Compile Include="Entidades\Atendente.cs" />
+    <Compile Include="Entidades\SessaoClienteWebSockets.cs" />
     <Compile Include="Entidades\EntidadeBase.cs" />
     <Compile Include="Entidades\Mensagem.cs" />
     <Compile Include="Entidades\Usuario.cs" />
+    <Compile Include="Interfaces\Repositorios\IRepositorioSessaoWebSockets.cs" />
+    <Compile Include="Interfaces\Repositorios\IRepositorioAtendente.cs" />
     <Compile Include="Interfaces\Repositorios\IRepositorioBaseIntegrador.cs" />
-    <Compile Include="Interfaces\Repositorios\IRepositorioConversa.cs" />
+    <Compile Include="Interfaces\Repositorios\IRepositorioAtendimento.cs" />
     <Compile Include="Interfaces\Repositorios\IRepositorioUsuario.cs" />
     <Compile Include="Interfaces\Repositorios\IRepositorioBase.cs" />
     <Compile Include="Interfaces\IOC\IResolvedorDependencia.cs" />
-    <Compile Include="Interfaces\Servico\IConversaServico.cs" />
-    <Compile Include="Interfaces\Servico\IUsuarioServico.cs" />
+    <Compile Include="Interfaces\Servico\IServicoSessaoClienteWebSockets.cs" />
+    <Compile Include="Interfaces\Servico\IServicoAtendente.cs" />
+    <Compile Include="Interfaces\Servico\IServicoAtendimento.cs" />
+    <Compile Include="Interfaces\Servico\IServicoUsuario.cs" />
     <Compile Include="IOC\ResolvedorDependenciaDominio.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Servicos\ConversaServico.cs" />
-    <Compile Include="Servicos\UsuarioServico.cs" />
+    <Compile Include="Servicos\ServicoAtendimento.cs" />
+    <Compile Include="Servicos\ServicoAtendente.cs" />
+    <Compile Include="Servicos\ServicoSessaoClienteWebSockets.cs" />
+    <Compile Include="Servicos\ServicoUsuario.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Validadores\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="DiagramaClasse.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

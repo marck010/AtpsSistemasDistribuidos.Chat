@@ -10,10 +10,10 @@ namespace ATPS.SistemasDistribuidos.Chat.Dominio.Interfaces.Repositorios
     public interface IRepositorioBase
     {
         IList<T> Todos<T>() where T : EntidadeBase;
-        T Obter<T>(object id) where T : EntidadeBase;
+        T Obter<T>(int id) where T : EntidadeBase;
         void Inserir<T>(T entidade) where T : EntidadeBase;
         void Atualizar<T>(T entidade) where T : EntidadeBase;
-        void Excluir<T>(object id) where T : EntidadeBase;
+        void Excluir<T>(int id) where T : EntidadeBase;
     }
 }
 

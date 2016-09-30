@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace ATPS.SistemasDistribuidos.Chat.Dominio.Entidades
 {
-    public class EntidadeBase
+    public abstract class EntidadeBase
     {
-        public virtual object Id { get; set; }
+        public virtual int Id { get; set; }
+
+        public abstract void Validar();
     }
 }

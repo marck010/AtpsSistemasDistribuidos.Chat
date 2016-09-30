@@ -57,9 +57,18 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Imagens\Logo-SAC-0800-Facil.jpg" />
     <Content Include="Content\main.css" />
-    <Content Include="Controller\ChatController.js" />
+    <Content Include="Controller\ClienteController.js" />
+    <Content Include="Controller\AtendenteController.js" />
+    <Content Include="libs\angular-route.js" />
+    <Content Include="libs\angular.min.js" />
+    <Content Include="libs\jquery-2.1.4.min.js" />
+    <Content Include="libs\linq.js" />
+    <Content Include="Scripts\Main.js" />
+    <Content Include="Scripts\Servicos\WebSocketsServico.js" />
     <Content Include="Views\chat.html" />
+    <Content Include="Views\atendente.html" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

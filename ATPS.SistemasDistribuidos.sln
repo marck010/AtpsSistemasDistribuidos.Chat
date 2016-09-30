@@ -17,8 +17,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATPS.SistemasDistribuidos.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATPS.SistemasDistribuidos.Chat.IOC", "ATPS.SistemasDistribuidos.Chat.IOC\ATPS.SistemasDistribuidos.Chat.IOC.csproj", "{A2FCAA1D-CE1A-47F4-8C61-CDF412602A5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATPS.SistemasDistribuidos.Chat.Dependencias", "ATPS.SistemasDistribuidos.Chat.Dependencias\ATPS.SistemasDistribuidos.Chat.Dependencias.csproj", "{E94DABF6-9A40-4AC2-8207-8652EE287DC4}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IoC", "IoC", "{2320883B-BAA7-4059-BFED-0ED5AEBD768C}"
 EndProject
 Project("{F088123C-0E9E-452A-89E6-6BA2F21D5CAC}") = "ATPS.SistemasDistribuidos.Chat.Diagramas", "ATPS.SistemasDistribuidos.Chat.Diagramas\ATPS.SistemasDistribuidos.Chat.Diagramas.modelproj", "{56188D4E-9B85-4D6D-A98F-0F23C499AD38}"
@@ -49,10 +47,6 @@ Global
 		{A2FCAA1D-CE1A-47F4-8C61-CDF412602A5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2FCAA1D-CE1A-47F4-8C61-CDF412602A5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2FCAA1D-CE1A-47F4-8C61-CDF412602A5D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E94DABF6-9A40-4AC2-8207-8652EE287DC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E94DABF6-9A40-4AC2-8207-8652EE287DC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E94DABF6-9A40-4AC2-8207-8652EE287DC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E94DABF6-9A40-4AC2-8207-8652EE287DC4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{56188D4E-9B85-4D6D-A98F-0F23C499AD38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{56188D4E-9B85-4D6D-A98F-0F23C499AD38}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56188D4E-9B85-4D6D-A98F-0F23C499AD38}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -60,9 +54,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{E94DABF6-9A40-4AC2-8207-8652EE287DC4} = {2320883B-BAA7-4059-BFED-0ED5AEBD768C}
-		{A2FCAA1D-CE1A-47F4-8C61-CDF412602A5D} = {2320883B-BAA7-4059-BFED-0ED5AEBD768C}
 	EndGlobalSection
 EndGlobal

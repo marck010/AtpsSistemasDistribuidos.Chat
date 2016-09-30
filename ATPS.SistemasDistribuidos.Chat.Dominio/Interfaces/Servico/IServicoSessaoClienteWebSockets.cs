@@ -9,8 +9,9 @@ using System.Threading.Tasks;
 
 namespace ATPS.SistemasDistribuidos.Dominio.Servicos
 {
-    public interface IConversaServico
+    public interface IServicoSessaoWebSockets
     {
-        Conversa Enviar(string remetente, string destinatario, string mensagem, Guid? identificador);
+        SessaoClienteWebSockets Inserir(string chaveSessaoWebSokets, Usuario usuario);
+        IList<SessaoClienteWebSockets> TodosClientesDisponivel();
     }
 }
