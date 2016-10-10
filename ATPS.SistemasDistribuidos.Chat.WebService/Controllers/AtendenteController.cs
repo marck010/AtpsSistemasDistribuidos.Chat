@@ -31,13 +31,6 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.Controllers
         private readonly IServicoAtendente _atendenteServico = ResolvedorDependenciaDominio.Instancia.Resolver<IServicoAtendente>();
         private readonly JsonSerializerSettings _settings;
 
-        public HttpResponseMessage Get()
-        {
-       
-            return Request.CreateResponse(HttpStatusCode.OK, "ié ié pegadinha do malandro");
-
-        }
-
         public HttpResponseMessage EntrarCliente(string chaveAcesso)
         {
             if (HttpContext.Current.IsWebSocketRequest || HttpContext.Current.IsWebSocketRequestUpgrading)

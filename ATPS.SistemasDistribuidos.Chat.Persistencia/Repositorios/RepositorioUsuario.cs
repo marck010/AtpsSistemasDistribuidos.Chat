@@ -12,7 +12,12 @@ namespace ATPS.SistemasDistribuidos.Chat.Persistencia.Repositorios
     {
         public IList<Usuario> UsuariosAguardandoAtendimento()
         {
-            return Todos().Where(x=>x.Disponivel).ToList();
+            return Todos().Where(x=>x.Disponivel && !x.Atendente).ToList();
+        }
+
+        public IList<Usuario> AtendentesDisponiveis()
+        {
+            return Todos().Where(x => x.Disponivel && x.Atendente).ToList();
         }
 
         public Usuario ObterPorChave(string chave)

@@ -1,14 +1,24 @@
 ﻿
 moduloChat.controller('AtendenteController', function ($scope, $http, $webSocket) {
+    function Init() {
+        var chaveAcesso = sessionStorage.getItem("ChaveAcesso");
+        if (chaveAcesso) {
+            $scope.Chat.Remetente.ChaveAcesso = chaveAcesso;
+            $scope.Chat.ConectarDesconectar();
+        }
+        else {
+            $scope.Chat.Conectado = false;
+        }
+    }
+
 
     $scope.Chat = {};
-    $scope.Chat.Atendimentos ;
+    $scope.Chat.Atendimentos = [];
     $scope.Chat.Remetente = {};
     $scope.Chat.Cliente = {};
     $scope.Chat.Conversa = {};
     $scope.Chat.Conversa.Mensagens = [];
     $scope.Chat.Status = "Desconectado";
-    $scope.Chat.Conectado = false;
 
     $scope.Chat.Cadastrar = function () {
         if ($scope.Chat.Remetente.Senha != $scope.Chat.Remetente.ConfirmarSenha) {
@@ -16,7 +26,7 @@ moduloChat.controller('AtendenteController', function ($scope, $http, $webSocket
             return;
         }
         var parametros = {
-            Nome:$scope.Chat.Remetente.Nome,
+            Nome: $scope.Chat.Remetente.Nome,
             Email: $scope.Chat.Remetente.Email,
             Telefone: $scope.Chat.Remetente.Telefone,
             Login: $scope.Chat.Remetente.Login,
@@ -26,7 +36,7 @@ moduloChat.controller('AtendenteController', function ($scope, $http, $webSocket
         $http({
             url: urlWsHttp + "Chat/CadastroAtendente",
             method: "POST",
-            data: JSON.stringify(parametros),       
+            data: JSON.stringify(parametros),
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -37,38 +47,20 @@ moduloChat.controller('AtendenteController', function ($scope, $http, $webSocket
     };
 
     $scope.Chat.ConectarDesconectar = function () {
+        sessionStorage.setItem("ChaveAcesso", $scope.Chat.Remetente.ChaveAcesso);
         $webSocket.Conectar($scope.Chat.Remetente.ChaveAcesso);
 
         $webSocket.OnMessage(function (mensagem) {
-            
+
             var retorno = JSON.parse(mensagem.data);
             if (retorno.Error) {
                 alert(retorno.Error)
                 return;
             }
-            if ($scope.Chat.Atendimentos.length == 0) {
-                $scope.Chat.Atendimentos.push(retorno);
-                $scope.$apply();
-            }
-            else {
-                var atendimentoEmAndamento = Enumerable.From($scope.Chat.Atendimentos).FirstOrDefault(null, function (atendimento) {
-                    return retorno.Usuario.Login == atendimento.Usuario.Login
-                });
 
-                if (atendimentoEmAndamento) {
-                    if (retorno.Conversa) {
-                        atendimentoEmAndamento.Conversa = retorno.Conversa;
-                        if (atendimentoEmAndamento.Selecionado) {
-                            $scope.Chat.Conversa = atendimentoEmAndamento.Conversa;
-                            $scope.Chat.MensagensDestinatario = atendimentoEmAndamento.Conversa.Mensagens;
-                            $scope.$apply();
-                        }
-                    }
-                } else {
-                    $scope.Chat.Atendimentos.push(retorno);
-                    $scope.$apply();
-                }
-            }
+            listarAtendimentos(retorno);
+            $scope.$apply();
+
         });
 
         $webSocket.OnOpen(function () {
@@ -99,10 +91,7 @@ moduloChat.controller('AtendenteController', function ($scope, $http, $webSocket
     };
 
     $scope.Chat.Remetente.Enviar = function () {
-        if ($scope.Chat.Cliente || !$scope.Chat.Cliente.Nome) {
-            alert("Favor informar o Cliente");
-            return;
-        }
+
         if ($scope.Chat.Mensagem) {
 
             var idConversa = !$scope.Chat.Conversa || !$scope.Chat.Conversa.Id ? '' : $scope.Chat.Conversa.Id;
@@ -114,5 +103,40 @@ moduloChat.controller('AtendenteController', function ($scope, $http, $webSocket
             $scope.Chat.Mensagem = '';
         }
     };
+
+    var chaveAcesso = sessionStorage.getItem("ChaveAcesso");
+    if (chaveAcesso) {
+        $scope.Chat.Remetente.ChaveAcesso = chaveAcesso;
+        $scope.Chat.ConectarDesconectar();
+    }
+    else {
+        $scope.Chat.Conectado = false;
+    }
+
+    Init();
+
+    function listarAtendimentos(retorno) {
+
+        if ($scope.Chat.Atendimentos.length == 0) {
+            $scope.Chat.Atendimentos.push(retorno);
+        }
+        else {
+            var atendimentoEmAndamento = Enumerable.From($scope.Chat.Atendimentos).FirstOrDefault(null, function (atendimento) {
+                return retorno.Usuario.Login == atendimento.Usuario.Login
+            });
+
+            if (atendimentoEmAndamento) {
+                if (retorno.Conversa) {
+                    atendimentoEmAndamento.Conversa = retorno.Conversa;
+                    if (atendimentoEmAndamento.Selecionado) {
+                        $scope.Chat.Conversa = atendimentoEmAndamento.Conversa;
+                        $scope.Chat.MensagensDestinatario = atendimentoEmAndamento.Conversa.Mensagens;
+                    }
+                }
+            } else {
+                $scope.Chat.Atendimentos.push(retorno);
+            }
+        }
+    }
 })
 

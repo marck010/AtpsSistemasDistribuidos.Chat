@@ -67,6 +67,7 @@
     <Content Include="libs\linq.js" />
     <Content Include="Scripts\Main.js" />
     <Content Include="Scripts\Servicos\WebSocketsServico.js" />
+    <Content Include="Views\cadastroAtendente.html" />
     <Content Include="Views\chat.html" />
     <Content Include="Views\atendente.html" />
     <Content Include="Web.config" />

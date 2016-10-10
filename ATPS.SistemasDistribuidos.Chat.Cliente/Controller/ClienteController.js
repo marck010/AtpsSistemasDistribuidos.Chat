@@ -4,7 +4,16 @@ moduloChat.controller('ClienteController', function ($scope, $http, $webSocket) 
     $scope.Chat = {};
     $scope.Chat.Atendente;
     $scope.Chat.Remetente = {};
-    $scope.Chat.Conectado = false;
+    function Init() {
+        var chaveAcesso = sessionStorage.getItem("ChaveAcesso");
+        if (chaveAcesso) {
+            $scope.Chat.Remetente.ChaveAcesso = chaveAcesso;
+            $scope.Chat.ConectarDesconectar();
+        }
+        else {
+            $scope.Chat.Conectado = false;
+        }
+    }
 
     $scope.Chat.Cadastrar = function () {
         var parametros = {
@@ -29,6 +38,7 @@ moduloChat.controller('ClienteController', function ($scope, $http, $webSocket) 
     };
 
     $scope.Chat.ConectarDesconectar = function () {
+        sessionStorage.setItem("ChaveAcesso", $scope.Chat.Remetente.ChaveAcesso);
         $webSocket.Conectar($scope.Chat.Remetente.ChaveAcesso);
 
         $webSocket.OnMessage(function (mensagem) {
@@ -38,14 +48,10 @@ moduloChat.controller('ClienteController', function ($scope, $http, $webSocket) 
                 alert(retorno.Error)
                 return;
             }
-            if (!$scope.Chat.Atendente) {
-                $scope.Chat.Atendente = retorno;
-                $scope.$apply();
-            }
-            else {
-                $scope.Chat.Atendente.Conversa = retorno.Conversa;
-                $scope.$apply();
-            }
+
+            listarAtendimentos(retorno);
+            $scope.$apply();
+
         });
 
         $webSocket.OnOpen(function () {
@@ -60,16 +66,27 @@ moduloChat.controller('ClienteController', function ($scope, $http, $webSocket) 
     };
 
     $scope.Chat.Remetente.Enviar = function () {
-        if ($scope.Chat.Atendente) {
+        if (!$scope.Chat.Atendente) {
             alert("Favor informar aguardar o atendimento");
             return;
         }
         if ($scope.Chat.Mensagem) {
             var id = $scope.Chat.Atendente.Conversa.Id;
-            $webSocket.Enviar($scope.Chat.Atendente.Login, $scope.Chat.Mensagem, id);
+            $webSocket.Enviar($scope.Chat.Atendente.Usuario.Login, $scope.Chat.Mensagem, id);
             $scope.Chat.Conversa.Mensagens.push({ Texto: $scope.Chat.Mensagem, Remetente: $scope.Chat.Remetente });
             $scope.Chat.Mensagem = '';
         }
     };
+
+    function listarAtendimentos(retorno) {
+        if (!$scope.Chat.Atendente) {
+            $scope.Chat.Atendente = retorno;
+        }
+        else {
+            $scope.Chat.Atendente.Conversa = retorno.Conversa;
+        }
+    }
+
+    Init();
 })
 

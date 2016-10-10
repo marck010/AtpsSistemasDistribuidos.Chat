@@ -10,6 +10,7 @@ namespace ATPS.SistemasDistribuidos.Chat.Dominio.Interfaces.Repositorios
     public interface IRepositorioUsuario : IRepositorioBaseIntegrador<Usuario>
     {
         IList<Usuario> UsuariosAguardandoAtendimento();
+        IList<Usuario> AtendentesDisponiveis();
         Usuario ObterPorChave(string chave);
         Usuario ObterPorLogin(string login);
         Usuario ObterPorNome(string nome);

@@ -21,7 +21,7 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
 
         private readonly JsonSerializerSettings _settings;
 
-        private WebSocketCollection webSocketClient;
+        private static WebSocketCollection webSocketClient;
 
         public WebSockets(string chaveAcesso)
         {
@@ -40,6 +40,8 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
 
             var usuarioConectado = _servicoUsuario.ConectarUsuario(_chaveAcesso, chaveSessaoWebSocketsRemetente);
 
+            webSocketClient.Add(this);
+
             var conversas = new List<Atendimento>();
             if (usuarioConectado.Atendente)
             {
@@ -50,6 +52,18 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
                     var respostaParaRemetente = JsonConvert.SerializeObject(objetoResposta, _settings);
 
                     this.Send(respostaParaRemetente);
+                }
+            }
+            else
+            {
+                var atendentesDisponiveis = _servicoUsuario.AtendentesDisponiveis();
+                var objetoResposta = ObjetoResposta(usuarioConectado);
+                var respostaParaRemetente = JsonConvert.SerializeObject(objetoResposta, _settings);
+
+                foreach (var atendenteDisponivel in atendentesDisponiveis)
+                {
+                    var sessaoAtendente = webSocketClient.SingleOrDefault(x => x.WebSocketContext.SecWebSocketKey == atendenteDisponivel.UltimaSessaoWebSockets.ChaveClienteWebSokets);
+                    sessaoAtendente.Send(respostaParaRemetente);
                 }
             }
         }
@@ -65,7 +79,7 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
             var mensagem = JsonConvert.DeserializeObject<Mensagem>(dados, _settings);
             var usuarioDestinatario = _servicoUsuario.ObterPorLogin(mensagem.Destinatario.Login);
 
-            var conversa = _servicoAtendimento.Enviar(_chaveAcesso, usuarioDestinatario.Login, mensagem.Texto, mensagem.Atendimento.Id);
+            var conversa = _servicoAtendimento.Enviar(_chaveAcesso, usuarioDestinatario.Login, mensagem.Texto, mensagem.Atendimento);
 
             var usuarioRementente = _servicoUsuario.ObterPorChave(_chaveAcesso);
             object objetoRespostaParaDestinatario = ObjetoResposta(usuarioRementente, conversa);
@@ -89,8 +103,11 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
         {
             object objetoResposta = new
             {
-                Nome = usuario.Nome,
-                Login = usuario.Login,
+                Usuario = new
+                {
+                    Nome = usuario.Nome,
+                    Login = usuario.Login
+                },
                 Conversa = conversa
             };
             return objetoResposta;

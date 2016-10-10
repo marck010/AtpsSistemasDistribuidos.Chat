@@ -56,10 +56,9 @@ input {
     width: 10%;
     margin: auto;
     position: relative;
-    top: 2%;
-    left: 10%;
+    top: 1%;
+    left: 0%;
 }
-
 
 .principal-container {
     width: 100%;
@@ -148,8 +147,6 @@ input {
 
 .field-groups {
     overflow: hidden;
-    /* text-align: center; */
-    /* left: 50%; */
 }
 
    .field-groups .field-form  {

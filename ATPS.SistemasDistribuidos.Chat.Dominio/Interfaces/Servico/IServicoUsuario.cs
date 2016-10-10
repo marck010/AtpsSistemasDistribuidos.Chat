@@ -12,6 +12,7 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
     public interface IServicoUsuario
     {
         IList<Usuario> UsuariosAguardandoAtendimento();
+        IList<Usuario> AtendentesDisponiveis();
 
         Usuario ObterPorChave(string chave);
         Usuario ObterPorLogin(string login);

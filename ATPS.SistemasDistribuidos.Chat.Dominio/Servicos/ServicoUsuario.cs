@@ -20,6 +20,11 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
             return _repositorioUsuario.UsuariosAguardandoAtendimento();
         }
 
+        public IList<Usuario> AtendentesDisponiveis() 
+        {
+            return _repositorioUsuario.AtendentesDisponiveis();
+        }
+
         public Usuario ObterPorChave(string chave)
         {
             var usuario = _repositorioUsuario.ObterPorChave(chave);
@@ -53,7 +58,7 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
             }
             else
             {
-                var sessaoSalva = _servicoSessaoWebSockets.Inserir(chaveAcesso, usuarioSalvo);
+                var sessaoSalva = _servicoSessaoWebSockets.Inserir(chaveSessao, usuarioSalvo);
                 usuarioSalvo.UltimaSessaoWebSockets = sessaoSalva;
             }
 

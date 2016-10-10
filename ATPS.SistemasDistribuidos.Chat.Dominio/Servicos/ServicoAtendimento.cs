@@ -15,13 +15,13 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
         private readonly IServicoAtendente _servicoAtendente = ResolvedorDependenciaDominio.Instancia.Resolver<IServicoAtendente>();
         private readonly IRepositorioAtendimento _repositorioConversa = ResolvedorDependenciaDominio.Instancia.Resolver<IRepositorioAtendimento>();
 
-        public Atendimento Enviar(string chaveAcessoRemetente, string loginDestinatario, string textoMensagem, int? idAtendimento)
+        public Atendimento Enviar(string chaveAcessoRemetente, string loginDestinatario, string textoMensagem, Atendimento atendimentoEmAndamento)
         {
             var usuarioRemetente = _servicoUsuario.ObterPorChave(chaveAcessoRemetente);
 
             if (usuarioRemetente != null)
             {
-                var atendimento = idAtendimento != null ? _repositorioConversa.Obter(idAtendimento.Value) : null;
+                var atendimento = atendimentoEmAndamento != null ? _repositorioConversa.Obter(atendimentoEmAndamento.Id) : null;
                 var usuarioDestinatario = _servicoUsuario.ObterPorLogin(loginDestinatario);
 
                 var mensagem = new Mensagem(textoMensagem, usuarioRemetente, usuarioDestinatario);

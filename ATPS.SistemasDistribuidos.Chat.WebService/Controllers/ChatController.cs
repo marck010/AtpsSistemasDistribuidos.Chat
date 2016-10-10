@@ -69,6 +69,41 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.Controllers
             return Json(retorno, JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult ObterAtendimentos(string chaveAcesso)
+        {
+            var usuarioConectado = _usuarioServico.ObterPorChave(chaveAcesso);
+            object retorno;
+            if (usuarioConectado.Atendente)
+            {
+                var clientesAguardandoAtendimento = _usuarioServico.UsuariosAguardandoAtendimento();
+                retorno = clientesAguardandoAtendimento.Select(usuario=> ObjetoResposta(usuario,  usuario.Atendimentos.LastOrDefault(atendimento=>atendimento.Atendente.Usuario.ChaveAcesso == chaveAcesso))) ;
+            }
+            else
+            {
+                var usuarioLogado = _usuarioServico.ObterPorChave(chaveAcesso);
+                var objetoResposta = ObjetoResposta(usuarioConectado);
+                var respostaParaRemetente = JsonConvert.SerializeObject(objetoResposta, _settings);
+                retorno = ObjetoResposta(usuarioLogado, usuarioLogado.Atendimentos.LastOrDefault(atendimento => atendimento.ClienteUsuario.ChaveAcesso == chaveAcesso));
+       
+            }
+            return Json(retorno, JsonRequestBehavior.AllowGet);
+        }
+
+        private static object ObjetoResposta(Usuario usuario, Atendimento conversa = null)
+        {
+            object objetoResposta = new
+            {
+                Usuario = new
+                {
+                    Nome = usuario.Nome,
+                    Login = usuario.Login
+                },
+                Conversa = conversa
+            };
+            return objetoResposta;
+        }
+
+
         private JsonSerializerSettings ConfigurarSerializacao()
         {
             JsonSerializerSettings settings = new JsonSerializerSettings
