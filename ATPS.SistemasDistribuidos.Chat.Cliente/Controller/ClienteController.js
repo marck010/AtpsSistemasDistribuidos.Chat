@@ -1,13 +1,12 @@
 ﻿
-moduloChat.controller('ClienteController', function ($scope, $http, $webSocket) {
+moduloChat.controller('ClienteController', function ($scope, $http, $webSocket, $sessionStorage) {
 
     $scope.Chat = {};
     $scope.Chat.Atendente;
     $scope.Chat.Remetente = {};
     function Init() {
-        var chaveAcesso = sessionStorage.getItem("ChaveAcesso");
-        if (chaveAcesso) {
-            $scope.Chat.Remetente.ChaveAcesso = chaveAcesso;
+        var remetente = $sessionStorage.GetItem("Remetente");
+        if (remetente) {
             $scope.Chat.ConectarDesconectar();
         }
         else {
@@ -38,10 +37,10 @@ moduloChat.controller('ClienteController', function ($scope, $http, $webSocket) 
     };
 
     $scope.Chat.ConectarDesconectar = function () {
-        sessionStorage.setItem("ChaveAcesso", $scope.Chat.Remetente.ChaveAcesso);
         $webSocket.Conectar($scope.Chat.Remetente.ChaveAcesso);
 
         $webSocket.OnMessage(function (mensagem) {
+            $sessionStorage.SetItem("Remetente", $scope.Chat.Remetente);
 
             var retorno = JSON.parse(mensagem.data);
             if (retorno.Error) {

@@ -66,6 +66,7 @@
     <Content Include="libs\jquery-2.1.4.min.js" />
     <Content Include="libs\linq.js" />
     <Content Include="Scripts\Main.js" />
+    <Content Include="Scripts\Servicos\CacheObjetosServico.js" />
     <Content Include="Scripts\Servicos\WebSocketsServico.js" />
     <Content Include="Views\cadastroAtendente.html" />
     <Content Include="Views\chat.html" />

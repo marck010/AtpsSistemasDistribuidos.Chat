@@ -1,5 +1,4 @@
 ﻿
-moduloChat.controller('AtendenteController', function ($scope, $http, $webSocket) {
     function Init() {
         var chaveAcesso = sessionStorage.getItem("ChaveAcesso");
         if (chaveAcesso) {
@@ -11,6 +10,7 @@ moduloChat.controller('AtendenteController', function ($scope, $http, $webSocket
         }
     }
 
+moduloChat.controller('AtendenteController', function ($scope, $http, $webSocket, $sessionStorage) {
 
     $scope.Chat = {};
     $scope.Chat.Atendimentos = [];
@@ -19,6 +19,7 @@ moduloChat.controller('AtendenteController', function ($scope, $http, $webSocket
     $scope.Chat.Conversa = {};
     $scope.Chat.Conversa.Mensagens = [];
     $scope.Chat.Status = "Desconectado";
+        var remetente = $sessionStorage.GetItem("Remetente");
 
     $scope.Chat.Cadastrar = function () {
         if ($scope.Chat.Remetente.Senha != $scope.Chat.Remetente.ConfirmarSenha) {
@@ -47,7 +48,7 @@ moduloChat.controller('AtendenteController', function ($scope, $http, $webSocket
     };
 
     $scope.Chat.ConectarDesconectar = function () {
-        sessionStorage.setItem("ChaveAcesso", $scope.Chat.Remetente.ChaveAcesso);
+        $sessionStorage.SetItem("Remetente", $scope.Chat.Remetente);
         $webSocket.Conectar($scope.Chat.Remetente.ChaveAcesso);
 
         $webSocket.OnMessage(function (mensagem) {
