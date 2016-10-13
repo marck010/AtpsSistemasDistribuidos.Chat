@@ -20,5 +20,6 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
         
         Usuario ConectarUsuario(string remetente, string chave);
         Usuario Inserir(string nome, string email, string telefone);
+        Usuario Atualizar(int id, string nome, string email, string telefone, bool disponivel);
     }
 }

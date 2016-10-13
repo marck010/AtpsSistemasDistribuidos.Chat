@@ -1,5 +1,6 @@
 ﻿using ATPS.SistemasDistribuidos.Chat.Dominio.Entidades;
 using ATPS.SistemasDistribuidos.Chat.Dominio.Interfaces.Repositorios;
+using ATPS.SistemasDistribuidos.Dominio.Excessoes;
 using ATPS.SistemasDistribuidos.Dominio.IOC;
 using System;
 using System.Collections.Generic;
@@ -39,6 +40,12 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
                     usuarioRemetente.Atendimentos.Add(atendimento);
                     _repositorioConversa.Inserir(atendimento);
                 }
+
+                if (!usuarioDestinatario.Atendente)
+                {
+                    _servicoUsuario.Atualizar(usuarioDestinatario.Id, usuarioDestinatario.Nome, usuarioDestinatario.Email, usuarioDestinatario.Telefone, disponivel: false);
+                }
+
                 return atendimento;
             }
             else
