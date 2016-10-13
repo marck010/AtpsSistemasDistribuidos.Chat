@@ -1,5 +1,6 @@
 ﻿using ATPS.SistemasDistribuidos.Chat.Dominio.Entidades;
 using ATPS.SistemasDistribuidos.Chat.Dominio.Interfaces.Repositorios;
+using ATPS.SistemasDistribuidos.Dominio.Excessoes;
 using ATPS.SistemasDistribuidos.Dominio.IOC;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
         private readonly IRepositorioUsuario _repositorioUsuario = ResolvedorDependenciaDominio.Instancia.Resolver<IRepositorioUsuario>();
         private readonly IRepositorioSessaoWebSockets _repositorioSessaoWebSockets = ResolvedorDependenciaDominio.Instancia.Resolver<IRepositorioSessaoWebSockets>();
         private readonly IServicoSessaoWebSockets _servicoSessaoWebSockets = ResolvedorDependenciaDominio.Instancia.Resolver<IServicoSessaoWebSockets>();
+
 
         public IList<Usuario> UsuariosAguardandoAtendimento()
         {
@@ -31,7 +33,6 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
             return usuario;
         }
 
-
         public Usuario ObterPorLogin(string login)
         {
             var usuario = _repositorioUsuario.ObterPorLogin(login);
@@ -47,6 +48,10 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
         public Usuario ConectarUsuario(string chaveAcesso, string chaveSessao)
         {
             var usuarioSalvo = _repositorioUsuario.ObterPorChave(chaveAcesso);
+            if (usuarioSalvo == null)
+            {
+                throw new SessaoException("Sessão Expirada");
+            }
             usuarioSalvo.Disponivel = true;
 
             if (usuarioSalvo.UltimaSessaoWebSockets != null)
@@ -71,6 +76,20 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
             var novoUsuario = new Usuario(nome, email, telefone, atendente: false);
             _repositorioUsuario.Inserir(novoUsuario);
             return novoUsuario;
+        }
+
+        public Usuario Atualizar(int id, string nome, string email, string telefone, bool disponivel)
+        {
+            var usuario = _repositorioUsuario.Obter(id);
+
+            usuario.Nome = nome;
+            usuario.Email = email;
+            usuario.Telefone = telefone;
+            usuario.Disponivel = disponivel;
+
+            _repositorioUsuario.Atualizar(usuario);
+            
+            return usuario;
         }
     }
 }

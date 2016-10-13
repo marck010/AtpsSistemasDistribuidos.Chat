@@ -43,7 +43,7 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
             }
             else
             {
-                throw new Exception("Usuario não encontrado");
+                throw new ValidacaoException("Usuario não encontrado");
             }
         }
     }

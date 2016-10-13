@@ -1,5 +1,6 @@
 ﻿using ATPS.SistemasDistribuidos.Chat.Dominio.Entidades;
 using ATPS.SistemasDistribuidos.Chat.Dominio.Interfaces.Repositorios;
+using ATPS.SistemasDistribuidos.Dominio.Excessoes;
 using ATPS.SistemasDistribuidos.Dominio.IOC;
 using System;
 using System.Collections.Generic;
@@ -29,7 +30,7 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
             var atendente = _repositorioAtendente.ObterPorLogin(login);
             if (atendente == null || atendente.Senha != senha)
             {
-                throw new Exception("Usuario ou senha inválidos");
+                throw new ValidacaoException("Usuario ou senha inválidos");
             }
             return atendente;
         }

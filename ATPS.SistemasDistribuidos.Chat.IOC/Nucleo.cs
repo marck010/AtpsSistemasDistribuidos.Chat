@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ATPS.SistemasDistribuidos.Dominio.Excessoes;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace ATPS.SistemasDistribuidos.Chat.IOC
             }
             else
             {
-                throw new Exception(String.Format("Dependência para a interface {0} já adicionada", typeof(TInterface).ToString()));
+                throw new ValidacaoException(String.Format("Dependência para a interface {0} já adicionada", typeof(TInterface).ToString()));
             }
         }
 
@@ -35,7 +36,7 @@ namespace ATPS.SistemasDistribuidos.Chat.IOC
                 return (TInterface)Activator.CreateInstance(item.Value);
             }
 
-            throw new Exception(String.Format("Não foi adicionada uma dependência para a interface {0}.", typeof(TInterface).ToString()));
+            throw new ValidacaoException(String.Format("Não foi adicionada uma dependência para a interface {0}.", typeof(TInterface).ToString()));
         }
 
         private KeyValuePair<Type, Type> Obter(Type @interface)

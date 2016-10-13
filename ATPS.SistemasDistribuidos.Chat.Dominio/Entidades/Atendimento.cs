@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ATPS.SistemasDistribuidos.Dominio.Excessoes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -47,7 +48,7 @@ namespace ATPS.SistemasDistribuidos.Chat.Dominio.Entidades
 
             if (erros.Any())
             {
-                throw new Exception(String.Join(Environment.NewLine, erros));
+                throw new ValidacaoException(String.Join(Environment.NewLine, erros));
             }
         }
     }

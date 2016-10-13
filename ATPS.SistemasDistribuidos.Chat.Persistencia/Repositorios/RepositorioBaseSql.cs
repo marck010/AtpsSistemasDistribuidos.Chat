@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ATPS.SistemasDistribuidos.Chat.Dominio.Interfaces.Repositorios;
+using ATPS.SistemasDistribuidos.Dominio.Excessoes;
 
 namespace ATPS.SistemasDistribuidos.Chat.Persistencia.Repositorios
 {
@@ -45,7 +46,7 @@ namespace ATPS.SistemasDistribuidos.Chat.Persistencia.Repositorios
             }
             else
             {
-                throw new Exception("Item com o mesmo identificador já inserido.");
+                throw new ValidacaoException("Item com o mesmo identificador já inserido.");
             }
         }
 
@@ -59,7 +60,7 @@ namespace ATPS.SistemasDistribuidos.Chat.Persistencia.Repositorios
             }
             else
             {
-                throw new Exception(String.Format("Objeto com o identificador \"{0}\" não encontrado.", entidade.Id));
+                throw new ValidacaoException(String.Format("Objeto com o identificador \"{0}\" não encontrado.", entidade.Id));
             }
         }
 
@@ -72,7 +73,7 @@ namespace ATPS.SistemasDistribuidos.Chat.Persistencia.Repositorios
             }
             else
             {
-                throw new Exception(String.Format("Item com o identificador \"{0}\" não encontrado.", id));
+                throw new ValidacaoException(String.Format("Item com o identificador \"{0}\" não encontrado.", id));
             }
         }
 
