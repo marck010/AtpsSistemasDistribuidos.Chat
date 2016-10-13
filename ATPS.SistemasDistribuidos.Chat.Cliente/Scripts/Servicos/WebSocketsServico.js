@@ -28,10 +28,18 @@ moduloChat.factory('$webSocket', function () {
         webSockets.onclose = onClose;
     };
 
-    var Enviar = function (login, mensagem, idConversa) {
+    var Enviar = function (login, mensagem, idAtendimento) {
 
         if (ConexaoAberta()) {
-            webSockets.send(" {Conversa:{Identificador:'" + idConversa + "'}, Destinatario:{Login:'" + login + "'}, Texto:'" + mensagem + "'}");
+
+            var objetoMensagem = {};
+            if (idAtendimento) {
+                objetoMensagem = " {Atendimento:{Id:" + idAtendimento + "}, Destinatario:{Login:'" + login + "'}, Texto:'" + mensagem + "'}";
+            } else {
+                objetoMensagem = " {Destinatario:{Login:'" + login + "'}, Texto:'" + mensagem + "'}";
+            }
+
+            webSockets.send(objetoMensagem);
         }
 
     }

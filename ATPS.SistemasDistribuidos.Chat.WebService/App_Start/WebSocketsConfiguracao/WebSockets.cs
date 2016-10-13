@@ -9,6 +9,7 @@ using ATPS.SistemasDistribuidos.Chat.Dominio;
 using ATPS.SistemasDistribuidos.Chat.Dominio.Entidades;
 using ATPS.SistemasDistribuidos.Dominio.Servicos;
 using ATPS.SistemasDistribuidos.Dominio.IOC;
+using ATPS.SistemasDistribuidos.Dominio.Excessoes;
 
 namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfiguracao
 {
@@ -37,41 +38,93 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
         public override void OnOpen()
         {
             var chaveSessaoWebSocketsRemetente = WebSocketContext.SecWebSocketKey;
-
-            var usuarioConectado = _servicoUsuario.ConectarUsuario(_chaveAcesso, chaveSessaoWebSocketsRemetente);
-
-            webSocketClient.Add(this);
-
-            var conversas = new List<Atendimento>();
-            if (usuarioConectado.Atendente)
+            try
             {
-                var clientesAguardandoAtendimento = _servicoUsuario.UsuariosAguardandoAtendimento();
-                foreach (var usuarioAguardandoAtendimento in clientesAguardandoAtendimento)
-                {
-                    var objetoResposta = ObjetoResposta(usuarioAguardandoAtendimento);
-                    var respostaParaRemetente = JsonConvert.SerializeObject(objetoResposta, _settings);
 
-                    this.Send(respostaParaRemetente);
+
+                var usuarioConectado = _servicoUsuario.ConectarUsuario(_chaveAcesso, chaveSessaoWebSocketsRemetente);
+
+                webSocketClient.Add(this);
+
+                var conversas = new List<Atendimento>();
+                if (usuarioConectado.Atendente)
+                {
+                    var clientesAguardandoAtendimento = _servicoUsuario.UsuariosAguardandoAtendimento();
+                    foreach (var usuarioAguardandoAtendimento in clientesAguardandoAtendimento)
+                    {
+                        var objetoResposta = ObjetoResposta(usuarioAguardandoAtendimento);
+                        var respostaParaAtendente = JsonConvert.SerializeObject(objetoResposta, _settings);
+
+                        this.Send(respostaParaAtendente);
+                    }
+
+                    foreach (var atendimento in usuarioConectado.Atendimentos)
+                    {
+                        var objetoResposta = ObjetoResposta(atendimento.ClienteUsuario, atendimento);
+
+                        var respostaParaAtendente = JsonConvert.SerializeObject(objetoResposta, _settings);
+
+                        this.Send(respostaParaAtendente);
+                    }
                 }
+                else
+                {
+                    var atendentesDisponiveis = _servicoUsuario.AtendentesDisponiveis();
+
+                    foreach (var atendenteDisponivel in atendentesDisponiveis)
+                    {
+                        var atendimentoIniciado = atendenteDisponivel.Atendimentos.LastOrDefault(x => x.ClienteUsuario.Login == usuarioConectado.Login);
+
+                        var objetoRespostaAtendente = ObjetoResposta(usuarioConectado, atendimentoIniciado);
+
+                        var respostaParaAtendente = JsonConvert.SerializeObject(objetoRespostaAtendente, _settings);
+
+                        var sessaoAtendente = webSocketClient.SingleOrDefault(x => x.WebSocketContext.SecWebSocketKey == atendenteDisponivel.UltimaSessaoWebSockets.ChaveClienteWebSokets);
+
+                        sessaoAtendente.Send(respostaParaAtendente);
+                    }
+
+                    var atendimento = usuarioConectado.Atendimentos.OrderBy(x => x.DataHora).LastOrDefault();
+                    if (atendimento != null)
+                    {
+                        var objetoRespostaCliente = ObjetoResposta(atendimento.Atendente.Usuario, atendimento);
+                        var respostaParaCliente = JsonConvert.SerializeObject(objetoRespostaCliente, _settings);
+                        Send(respostaParaCliente);
+                    }
+                }
+
             }
-            else
+            catch (SessaoException ex)
             {
-                var atendentesDisponiveis = _servicoUsuario.AtendentesDisponiveis();
-                var objetoResposta = ObjetoResposta(usuarioConectado);
-                var respostaParaRemetente = JsonConvert.SerializeObject(objetoResposta, _settings);
-
-                foreach (var atendenteDisponivel in atendentesDisponiveis)
-                {
-                    var sessaoAtendente = webSocketClient.SingleOrDefault(x => x.WebSocketContext.SecWebSocketKey == atendenteDisponivel.UltimaSessaoWebSockets.ChaveClienteWebSokets);
-                    sessaoAtendente.Send(respostaParaRemetente);
-                }
+                RetornarErro(ex);
             }
+            catch (Exception ex)
+            {
+                RetornarErro(ex);
+            }
+        }
+
+        public void RetornarErro(Exception ex)
+        {
+            var error = JsonConvert.SerializeObject(new { Error = ex.Message, TipoErro = TipoErroEnum.NaoTratado });
+            this.Send(error);
+        }
+
+        public void RetornarErro(SessaoException ex)
+        {
+            var error = JsonConvert.SerializeObject(new { Error = ex.Message, TipoErro = TipoErroEnum.SessaoExpirada });
+            this.Send(error);
+        }
+
+        public void RetornarErro(ValidacaoException ex)
+        {
+            var error = JsonConvert.SerializeObject(new { Error = ex.Message, TipoErro = TipoErroEnum.ErroTratado});
+            this.Send(error);
         }
 
         public override void OnError()
         {
-            var error = JsonConvert.SerializeObject(new { Error = Error.Message });
-            this.Send(error);
+            RetornarErro(Error);
         }
 
         public override void OnMessage(string dados)
