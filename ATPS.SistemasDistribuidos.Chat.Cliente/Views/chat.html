@@ -15,7 +15,7 @@
                 <div class="form">
                     <h2>Bem vindo!!</h2>
                     <h2>Preencha seus dados para ser atendido</h2>
-
+                    <br />
                     <div class="field-groups">
                         <input placeholder="Nome" class="field-form" type="text" ng-model="Chat.Remetente.Nome" />
                     </div>
@@ -33,13 +33,10 @@
             <div class="chat" ng-show="Chat.Conectado">
 
                 <div class="view-mensagens">
-                    <div class="aviso-indisponibilidade">
-                        <h2 ng-hide="Chat.Atendente.Conversa.Mensagens.length">Nenhum atendente disponível agora. Por favor aguarde.</h2>
-                    </div>
-
                     <div class="mensagens">
                         <div class="mensagem" ng-repeat="mensagem in Chat.Atendente.Conversa.Mensagens">
-                            <span ng-model="mensagem.Texto">{{mensagem.Remetente.Nome}} : {{mensagem.Texto}}</span>
+                            <!--<span class="nome-remetente">{{mensagem.Remetente.Nome}}</span>-->
+                            <div ng-class="mensagem.Remetente.Nome == Chat.Remetente.Nome? 'mensagem-enviada': 'mensagem-recebida'" ng-model="mensagem.Texto">{{mensagem.Texto}}</div>
                         </div>
                     </div>
                     <div class="envio field-form" ng-show="Chat.Conectado">
@@ -58,5 +55,6 @@
 <script type="text/javascript" src="/libs/linq.js"></script>
 <script type="text/javascript" src="/Scripts/main.js"></script>
 <script type="text/javascript" src="/Scripts/ServicoS/WebSocketsServico.js"></script>
+<script type="text/javascript" src="/Scripts/Servicos/CacheObjetosServico.js"></script>
 <script type="text/javascript" src="/Controller/ClienteController.js"></script>
 </html>

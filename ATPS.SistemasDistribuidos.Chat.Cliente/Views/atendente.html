@@ -46,7 +46,7 @@
                     <div class="view-conversas">
                         <div ng-class="{conversa: !usaurio.Selecionado, 'conversa-selecionada': !!usuario.Selecionado}" ng-model="Chat.Atendimentos" ng-repeat="usuario in Chat.Atendimentos" ng-click="Chat.SelecionarDestinatario(usuario)">
                             <div class="foto">
-                                <img width="44px" height="44px" src="http://www.chicletecombanana.com.br/2012/img/avatar_padrao.jpg" />
+                                <img width="44px" height="44px" src="https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg" />
                             </div>
                             <span ng-model="usuario.Nome">{{usuario.Usuario.Nome}}</span>
                         </div>
@@ -56,10 +56,10 @@
                 <div class="view-mensagens-admin">
                     <div class="mensagens">
                         <div class="mensagem" ng-repeat="mensagem in Chat.Conversa.Mensagens">
-                            <span ng-model="mensagem.Texto">{{mensagem.Remetente.Nome}} : {{mensagem.Texto}}</span>
+                            <div ng-class="mensagem.Remetente.Nome == Chat.Remetente.Nome? 'mensagem-enviada': 'mensagem-recebida'" ng-model="mensagem.Texto">{{mensagem.Texto}}</div>
                         </div>
                     </div>
-                    <div class="envio field-form">
+                    <div class="envio field-form" ng-show="Chat.AtendimentoSelecionado">
                         <textarea ng-model="Chat.Mensagem" row="50"></textarea>
                         <input class="botao-enviar" type="button" ng-click="Chat.Remetente.Enviar()" value="Enviar" />
                     </div>
@@ -74,5 +74,6 @@
 <script type="text/javascript" src="/libs/linq.js"></script>
 <script type="text/javascript" src="/Scripts/main.js"></script>
 <script type="text/javascript" src="/Scripts/Servicos/WebSocketsServico.js"></script>
+<script type="text/javascript" src="/Scripts/Servicos/CacheObjetosServico.js"></script>
 <script type="text/javascript" src="/Controller/AtendenteController.js"></script>
 </html>
