@@ -36,8 +36,10 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
                 {
                     var atendente = _servicoAtendente.ObterPorChaveAcesso(chaveAcessoRemetente);
                     atendimento = new Atendimento(usuarioDestinatario, atendente);
+                    mensagem.Atendimento = atendimento;
                     atendimento.Mensagens.Add(mensagem);
                     usuarioRemetente.Atendimentos.Add(atendimento);
+                    usuarioDestinatario.Atendimentos.Add(atendimento);
                     _repositorioConversa.Inserir(atendimento);
                 }
 
