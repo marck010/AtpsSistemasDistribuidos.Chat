@@ -57,7 +57,7 @@ moduloChat.controller('AtendenteController', function ($scope, $http, $webSocket
 
             var retorno = JSON.parse(mensagem.data);
             if (retorno.Error) {
-                alert(retorno.Error)
+                TratarErro(retorno, matarSessao)
                 return;
             }
 
@@ -77,8 +77,7 @@ moduloChat.controller('AtendenteController', function ($scope, $http, $webSocket
 
         $webSocket.OnClose(function () {
             alert("Por favor tente se conectar novamente");
-            $sessionStorage.RemoveItem("Remetente");
-            $scope.Chat.Conectado = false;
+            matarSessao();
         });
     };
 
@@ -94,6 +93,8 @@ moduloChat.controller('AtendenteController', function ($scope, $http, $webSocket
         atendimentoSelecionado.Selecionado = true;
         if (atendimentoSelecionado.Conversa) {
             $scope.Chat.Conversa = atendimentoSelecionado.Conversa;
+        } else {
+            $scope.Chat.Conversa = {};
         }
         $scope.Chat.Cliente = atendimentoSelecionado.Usuario;
 
@@ -127,7 +128,6 @@ moduloChat.controller('AtendenteController', function ($scope, $http, $webSocket
                     atendimentoEmAndamento.Conversa = retorno.Conversa;
                     if (atendimentoEmAndamento.Selecionado) {
                         $scope.Chat.Conversa = atendimentoEmAndamento.Conversa;
-                        $scope.Chat.MensagensDestinatario = atendimentoEmAndamento.Conversa.Mensagens;
                     }
                 }
             } else {
@@ -136,6 +136,11 @@ moduloChat.controller('AtendenteController', function ($scope, $http, $webSocket
         }
     }
 
+    function matarSessao() {
+        $sessionStorage.RemoveItem("Remetente");
+        $scope.Chat.Conectado = false;
+        $scope.$apply();
+    }
     Init();
 
 })

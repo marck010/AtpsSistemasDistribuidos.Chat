@@ -50,7 +50,10 @@ moduloChat.controller('ClienteController', function ($scope, $http, $webSocket, 
 
                 var retorno = JSON.parse(mensagem.data);
                 if (retorno.Error) {
-                    alert(retorno.Error)
+                    if (retorno.Error) {
+                        TratarErro(retorno, matarSessao)
+                        return;
+                    }
                     return;
                 }
 
@@ -96,6 +99,12 @@ moduloChat.controller('ClienteController', function ($scope, $http, $webSocket, 
         else {
             $scope.Chat.Atendente.Conversa = retorno.Conversa;
         }
+    }
+
+    function matarSessao() {
+        $sessionStorage.RemoveItem("Remetente");
+        $scope.Chat.Conectado = false;
+        $scope.$apply();
     }
 
     Init();

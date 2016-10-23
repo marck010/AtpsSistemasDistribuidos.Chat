@@ -34,7 +34,7 @@ namespace ATPS.SistemasDistribuidos.Chat.Dominio.Entidades
 
             if (erros.Any())
             {
-                throw new ValidacaoException(String.Join(Environment.NewLine, erros));
+                throw new ValidacaoException(erros);
             }
         }
 

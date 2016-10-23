@@ -8,10 +8,17 @@ namespace ATPS.SistemasDistribuidos.Dominio.Excessoes
 {
     public class ValidacaoException : Exception
     {
-        public ValidacaoException(string mensagem)
-            : base(mensagem)
-        {
+        public List<String> ListaMensagens { get; set; }
 
+        public ValidacaoException(string mensgem)
+        {
+            ListaMensagens = new List<string>();
+            ListaMensagens.Add(mensgem);
+        }
+
+        public ValidacaoException(List<string> mensagens) : base(String.Join(Environment.NewLine, mensagens))
+        {
+            ListaMensagens = mensagens;
         }
     }
 }

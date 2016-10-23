@@ -37,16 +37,14 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
 
         public override void OnOpen()
         {
-            var chaveSessaoWebSocketsRemetente = WebSocketContext.SecWebSocketKey;
             try
             {
-
-
+                var chaveSessaoWebSocketsRemetente = WebSocketContext.SecWebSocketKey;
                 var usuarioConectado = _servicoUsuario.ConectarUsuario(_chaveAcesso, chaveSessaoWebSocketsRemetente);
+                var conversas = new List<Atendimento>();
 
                 webSocketClient.Add(this);
 
-                var conversas = new List<Atendimento>();
                 if (usuarioConectado.Atendente)
                 {
                     var clientesAguardandoAtendimento = _servicoUsuario.UsuariosAguardandoAtendimento();
@@ -96,10 +94,17 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
             }
             catch (SessaoException ex)
             {
+                WebSocketContext.WebSocket.Abort();
+                RetornarErro(ex);
+            }
+            catch (ValidacaoException ex)
+            {
+                WebSocketContext.WebSocket.Abort();
                 RetornarErro(ex);
             }
             catch (Exception ex)
             {
+                WebSocketContext.WebSocket.Abort();
                 RetornarErro(ex);
             }
         }
@@ -118,7 +123,7 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
 
         public void RetornarErro(ValidacaoException ex)
         {
-            var error = JsonConvert.SerializeObject(new { Error = ex.Message, TipoErro = TipoErroEnum.ErroTratado});
+            var error = JsonConvert.SerializeObject(new { Error = ex.Message, TipoErro = TipoErroEnum.ErroTratado });
             this.Send(error);
         }
 
@@ -129,22 +134,38 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
 
         public override void OnMessage(string dados)
         {
-            var mensagem = JsonConvert.DeserializeObject<Mensagem>(dados, _settings);
-            var usuarioDestinatario = _servicoUsuario.ObterPorLogin(mensagem.Destinatario.Login);
+            try
+            {
+                var mensagem = JsonConvert.DeserializeObject<Mensagem>(dados, _settings);
+                var usuarioDestinatario = _servicoUsuario.ObterPorLogin(mensagem.Destinatario.Login);
 
-            var conversa = _servicoAtendimento.Enviar(_chaveAcesso, usuarioDestinatario.Login, mensagem.Texto, mensagem.Atendimento);
+                var conversa = _servicoAtendimento.Enviar(_chaveAcesso, usuarioDestinatario.Login, mensagem.Texto, mensagem.Atendimento);
 
-            var usuarioRementente = _servicoUsuario.ObterPorChave(_chaveAcesso);
-            object objetoRespostaParaDestinatario = ObjetoResposta(usuarioRementente, conversa);
-            var responstaParaDestinatario = JsonConvert.SerializeObject(objetoRespostaParaDestinatario, _settings);
+                var usuarioRementente = _servicoUsuario.ObterPorChave(_chaveAcesso);
+                object objetoRespostaParaDestinatario = ObjetoResposta(usuarioRementente, conversa);
+                var responstaParaDestinatario = JsonConvert.SerializeObject(objetoRespostaParaDestinatario, _settings);
 
-            var conexaoClienteDestino = webSocketClient.SingleOrDefault(x => x.WebSocketContext.SecWebSocketKey == usuarioDestinatario.UltimaSessaoWebSockets.ChaveClienteWebSokets);
-            conexaoClienteDestino.Send(responstaParaDestinatario);
+                var conexaoClienteDestino = webSocketClient.SingleOrDefault(x => x.WebSocketContext.SecWebSocketKey == usuarioDestinatario.UltimaSessaoWebSockets.ChaveClienteWebSokets);
+                conexaoClienteDestino.Send(responstaParaDestinatario);
 
-            object objetoRespostaParaRemetente = ObjetoResposta(usuarioDestinatario, conversa);
-            var responstaParaRemetente = JsonConvert.SerializeObject(objetoRespostaParaRemetente, _settings);
+                object objetoRespostaParaRemetente = ObjetoResposta(usuarioDestinatario, conversa);
+                var responstaParaRemetente = JsonConvert.SerializeObject(objetoRespostaParaRemetente, _settings);
 
-            Send(responstaParaRemetente);
+                Send(responstaParaRemetente);
+            }
+            catch (SessaoException ex)
+            {
+                RetornarErro(ex);
+            }
+            catch (ValidacaoException ex)
+            {
+                RetornarErro(ex);
+            }
+            catch (Exception ex)
+            {
+                RetornarErro(ex);
+            }
+           
         }
 
         public override void OnClose()

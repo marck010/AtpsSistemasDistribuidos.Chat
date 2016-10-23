@@ -8,6 +8,10 @@ namespace ATPS.SistemasDistribuidos.Dominio.Excessoes
 {
     public class SessaoException : Exception
     {
+        public SessaoException()
+        {
+
+        }
         public SessaoException(string mensagem):base(mensagem)
         {
 
