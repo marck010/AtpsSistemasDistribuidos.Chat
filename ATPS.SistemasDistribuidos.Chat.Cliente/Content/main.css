@@ -41,13 +41,13 @@ input {
     }
 
 .aviso-indisponibilidade {
-    /*position: absolute;
+    position: absolute;
     top: 41%;
-    /* margin: auto; */
+     margin: auto; 
     right: 33%;
-    */;
 }
-
+h4 {
+}
     .aviso-indisponibilidade h2 {
         text-align: center;
         color: #5d5959;
@@ -73,8 +73,9 @@ input {
     width: 70%;
     overflow: hidden;
     height: 82%;
-    border: 1px solid rgb(235, 234, 234);
+    border: 1px solid rgb(131, 154, 232);
     margin-top: 10px;
+    box-shadow: 6px 6px 7px #ece8e8;
 }
 
 .view-lateral {
@@ -82,7 +83,7 @@ input {
     height: 100%;
     width: calc(30% - 2px);
     /* background-color: #fff; */
-    border-right: 1px solid #ececec;
+    border-right: 1px solid #8aa1e8;
 }
 
 .box-cadastrar {
@@ -110,27 +111,27 @@ input {
 }
 
     .view-conversas .conversa {
-        width: calc(100% - 14px);
-        background: rgb(249, 249, 248);
+        width: 100%;
+        background: #dde4f7;
         cursor: pointer;
-        /* border-bottom: 1px solid #ebeaea; */
-        border: 1px solid #ebeaea;
-        border-left: 3px solid #d3d6d4;
+        border-bottom: 1px solid #ebeaea;
+        /* border: 1px solid #ebeaea; */
+        /* border-left: 3px solid #d3d6d4; */
         height: 50px;
-        margin: 5px 0px 5px 5px;
+        margin-top: 5px;
         padding: 2px 2px 2px 5px;
     }
 
     .view-conversas .conversa-selecionada {
-        width: calc(100% - 12px);
-        background: linear-gradient(to right, #dfdfdc,rgb(255, 255, 255));
+        width: 100%;
         cursor: pointer;
-        border-bottom: 1px solid #fffbfb;
-        border: 1px solid #ebeaea;
-        border-left: 3px solid rgba(109, 107, 107, 0.65);
+        /* border-bottom: 1px solid #fffbfb; */
+        /* border: 1px solid #d2d2e0; */
+        /* border-left: 3px solid rgba(109, 107, 107, 0.65); */
         height: 50px;
-        margin: 5px 0px 5px 5px;
+        /* margin: 5px 0px 5px 5px; */
         padding: 2px 0 4px 4px;
+        background: linear-gradient(to right, #dde4f7,rgb(248, 249, 253));
     }
 
     .view-conversas .foto {
@@ -143,7 +144,7 @@ input {
     }
 
     .view-conversas .conversa:hover {
-        background: rgba(214, 206, 206, 0.28);
+        background: rgba(230, 232, 247, 0.28);
     }
 
 .field-groups {
@@ -188,7 +189,7 @@ input {
 
 
     .mensagens .mensagem-recebida {
-        border: solid 1px #b5b4b4;
+        /* border: solid 1px #c0c0cd; */
         border-radius: 3px;
         padding: 10px;
         margin-left: 23px;
@@ -196,12 +197,13 @@ input {
         position: relative;
         float: left;
         width: 47%;
-        left: 1%;
-        background: #c0c0cd;
+        left: -1%;
+        box-shadow: 3px 3px 3px #dedddd;
+        background: #cff1d0;
     }
 
     .mensagens .mensagem-enviada {
-        border: solid 1px #b5b4b4;
+        /* border: solid 1px #8fa5ea; */
         border-radius: 3px;
         padding: 10px;
         margin-right: 23px;
@@ -210,31 +212,61 @@ input {
         float: right;
         width: 47%;
         right: 1%;
-        background: #e8e8f2;
+        background: #eceef5;
+        box-shadow: -3px 4px 3px #e8e4e4;
     }
 
 
-    .mensagens .mensagem-recebida:after {
+    .mensagens .mensagem-recebida:before {
         position: relative;
         float: left;
         position: absolute;
         content: "";
-        border-top: 5px solid transparent;
-        border-right: 10px solid #1E8BC3;
-        border-bottom: 5px solid transparent;
+        border-top: 20px solid transparent;
+        border-right: 15px solid #cff1d0;
         bottom: 13px;
-        left: -9px;
+        right: 100%;
+    }
+
+    .mensagens .mensagem-recebida:after {
+        position: relative;
+        right: 100%;
+        content: "";
+        position: absolute;
+        border: solid;
+        border-width: 5.1px 10px;
+        border-left-color: transparent;
+        border-bottom-color: #FFF;
+        border-top-color: transparent;
+        border-right-color: #fff;
+        top: 15px;
+        float: right;
+    }
+
+
+    .mensagens .mensagem-enviada:before {
+        position: relative;
+        left: 100%;
+        content: "";
+        border-top: 19px solid transparent;
+        border-left: 15px solid #eceef5;
+        position: absolute;
+        top: 14px;
+        float: right;
     }
 
     .mensagens .mensagem-enviada:after {
         position: relative;
         left: 100%;
         content: "";
-        border-top: 5px solid transparent;
-        border-left: 13px solid #1E8BC3;
-        border-bottom: 5px solid transparent;
         position: absolute;
-        top: 14px;
+        border: solid;
+        border-width: 5.1px 11px;
+        border-left-color: #fdfdfd;
+        border-bottom-color: #fdfdfd;
+        border-top-color: transparent;
+        border-right-color: transparent;
+        top: 24px;
         float: right;
     }
 
@@ -280,7 +312,7 @@ input {
 
 .field-form textarea {
     height: 71px;
-    border: 1px solid #ebeaea;
+    border: 1px solid #829be7;
     width: 85%;
 }
 
@@ -294,7 +326,7 @@ input {
     overflow: hidden;
     height: auto;
     height: 76px;
-    border: 1px solid #ebeaea;
+    border: 1px solid #8aa1e9;
     cursor: pointer;
     background: #f9f9f8;
 }
