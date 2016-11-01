@@ -27,21 +27,21 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
             return _repositorioUsuario.AtendentesDisponiveis();
         }
 
-        public Usuario ObterPorChave(string chave)
+        public Usuario ObterPorChave(string chave, bool naoPermitirNulo = false)
         {
-            var usuario = _repositorioUsuario.ObterPorChave(chave);
+            var usuario = _repositorioUsuario.ObterPorChave(chave, naoPermitirNulo);
             return usuario;
         }
 
-        public Usuario ObterPorLogin(string login)
+        public Usuario ObterPorLogin(string login, bool naoPermitirNulo = false)
         {
-            var usuario = _repositorioUsuario.ObterPorLogin(login);
+            var usuario = _repositorioUsuario.ObterPorLogin(login, naoPermitirNulo);
             return usuario;
         }
 
-        public Usuario ObterPorNome(string nome)
+        public Usuario ObterPorNome(string nome, bool naoPermitirNulo = false)
         {
-            var usuario = _repositorioUsuario.ObterPorNome(nome);
+            var usuario = _repositorioUsuario.ObterPorNome(nome, naoPermitirNulo);
             return usuario;
         }
 

@@ -23,7 +23,7 @@ namespace ATPS.SistemasDistribuidos.Chat.Persistencia.Repositorios
             Entidades = new List<EntidadeBase>();
         }
 
-        public T Obter<T>(int id) where T : EntidadeBase
+        public T Obter<T>(int id, bool naoPermitirNulo = false) where T : EntidadeBase
         {
             return (T)Entidades.SingleOrDefault(x => x.GetType() == typeof(T) && x.Id.ToString() == id.ToString());
         }

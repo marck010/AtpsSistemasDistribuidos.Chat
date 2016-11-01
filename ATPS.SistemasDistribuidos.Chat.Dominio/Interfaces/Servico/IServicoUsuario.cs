@@ -14,12 +14,13 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
         IList<Usuario> UsuariosAguardandoAtendimento();
         IList<Usuario> AtendentesDisponiveis();
 
-        Usuario ObterPorChave(string chave);
-        Usuario ObterPorLogin(string login);
-        Usuario ObterPorNome(string nome);
+        Usuario ObterPorChave(string chave, bool naoPermitirNulo = false);
+        Usuario ObterPorLogin(string login, bool naoPermitirNulo = false);
+        Usuario ObterPorNome(string nome, bool naoPermitirNulo = false);
         
         Usuario ConectarUsuario(string remetente, string chave);
         Usuario Inserir(string nome, string email, string telefone);
         Usuario Atualizar(int id, string nome, string email, string telefone, bool disponivel);
+        void RemoverSessaoDoUsuario(Usuario usuario);
     }
 }

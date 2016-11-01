@@ -10,7 +10,7 @@ namespace ATPS.SistemasDistribuidos.Chat.Dominio.Interfaces.Repositorios
 {
     public interface IRepositorioAtendente : IRepositorioBaseIntegrador<Atendente>
     {
-        Atendente ObterPorChave(string chave);
-        Atendente ObterPorLogin(string login);
+        Atendente ObterPorChave(string chave, bool naoPermitirNulo = false);
+        Atendente ObterPorLogin(string login, bool naoPermitirNulo = false);
     }
 }

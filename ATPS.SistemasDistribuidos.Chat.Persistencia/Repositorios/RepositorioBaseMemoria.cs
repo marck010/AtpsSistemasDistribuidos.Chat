@@ -24,9 +24,17 @@ namespace ATPS.SistemasDistribuidos.Chat.Persistencia.Repositorios
             Entidades = new List<EntidadeBase>();
         }
 
-        public T Obter<T>(int id) where T : EntidadeBase
+        public T Obter<T>(int id, bool naoPermitirNulo = false) where T : EntidadeBase
         {
-            return (T)Entidades.SingleOrDefault(x => x.GetType() == typeof(T) && id != null && x.Id.ToString() == id.ToString());
+            var tipoEntidade = typeof(T);
+            var objetoEncontrado =  (T)Entidades.SingleOrDefault(x => x.GetType() == typeof(T) && id != null && x.Id.ToString() == id.ToString());
+
+            if (objetoEncontrado == null && naoPermitirNulo)
+            {
+                throw new ValidacaoException(String.Format("{0} não encontrado", tipoEntidade.Name));
+            }
+
+            return objetoEncontrado;
         }
 
         public IList<T> Todos<T>() where T : EntidadeBase

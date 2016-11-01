@@ -12,6 +12,6 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
 {
     public interface IServicoAtendimento
     {
-        Atendimento Enviar(string chaveAcessoRemetente, string loginDestinatario, string mensagem, Atendimento atendimentoEmAndamento);
+        Atendimento SalvarAtualizarAtendimento(string chaveAcessoRemetente, Usuario usuarioDestinatario, string mensagem, Atendimento atendimentoEmAndamento);
     }
 }
