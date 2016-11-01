@@ -16,14 +16,13 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
         private readonly IServicoAtendente _servicoAtendente = ResolvedorDependenciaDominio.Instancia.Resolver<IServicoAtendente>();
         private readonly IRepositorioAtendimento _repositorioConversa = ResolvedorDependenciaDominio.Instancia.Resolver<IRepositorioAtendimento>();
 
-        public Atendimento Enviar(string chaveAcessoRemetente, string loginDestinatario, string textoMensagem, Atendimento atendimentoEmAndamento)
+        public Atendimento SalvarAtualizarAtendimento(string chaveAcessoRemetente, Usuario usuarioDestinatario, string textoMensagem, Atendimento atendimentoEmAndamento)
         {
             var usuarioRemetente = _servicoUsuario.ObterPorChave(chaveAcessoRemetente);
 
             if (usuarioRemetente != null)
             {
                 var atendimento = atendimentoEmAndamento != null ? _repositorioConversa.Obter(atendimentoEmAndamento.Id) : null;
-                var usuarioDestinatario = _servicoUsuario.ObterPorLogin(loginDestinatario);
 
                 var mensagem = new Mensagem(textoMensagem, usuarioRemetente, usuarioDestinatario);
 
@@ -35,25 +34,33 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
                 else
                 {
                     var atendente = _servicoAtendente.ObterPorChaveAcesso(chaveAcessoRemetente);
-                    atendimento = new Atendimento(usuarioDestinatario, atendente);
-                    mensagem.Atendimento = atendimento;
-                    atendimento.Mensagens.Add(mensagem);
+                    atendimento = SalvarNovoAtendimento(usuarioDestinatario, atendimento, mensagem, atendente);
+
                     usuarioRemetente.Atendimentos.Add(atendimento);
                     usuarioDestinatario.Atendimentos.Add(atendimento);
-                    _repositorioConversa.Inserir(atendimento);
-                }
 
-                if (!usuarioDestinatario.Atendente)
-                {
                     _servicoUsuario.Atualizar(usuarioDestinatario.Id, usuarioDestinatario.Nome, usuarioDestinatario.Email, usuarioDestinatario.Telefone, disponivel: false);
+                    _servicoUsuario.Atualizar(usuarioRemetente.Id, usuarioRemetente.Nome, usuarioRemetente.Email, usuarioRemetente.Telefone, disponivel: false);
+                
                 }
 
                 return atendimento;
             }
             else
             {
-                throw new ValidacaoException("Usuario não encontrado");
+                throw new ValidacaoException("Remetente não encontrado");
             }
+        }
+
+        private Atendimento SalvarNovoAtendimento(Usuario usuarioDestinatario, Atendimento atendimento, Mensagem mensagem, Atendente atendente)
+        {
+
+            atendimento = new Atendimento(usuarioDestinatario, atendente);
+            atendimento.Mensagens.Add(mensagem);
+            mensagem.Atendimento = atendimento;
+
+            _repositorioConversa.Inserir(atendimento);
+            return atendimento;
         }
     }
 }
