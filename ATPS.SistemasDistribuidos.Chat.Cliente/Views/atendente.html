@@ -46,9 +46,11 @@
                     <div class="view-conversas">
                         <div ng-class="{conversa: !usaurio.Selecionado, 'conversa-selecionada': !!usuario.Selecionado}" ng-model="Chat.Atendimentos" ng-repeat="usuario in Chat.Atendimentos" ng-click="Chat.SelecionarDestinatario(usuario)">
                             <div class="foto">
-                                <img width="44px" height="44px" src="https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg" />
+                                <img width="44px" height="44px" src="../Content/Imagens/nobody_m.original.jpg" />
                             </div>
-                            <h4 ng-model="usuario.Nome">{{usuario.Usuario.Nome}}</h4>
+                            <div class="informacao-destinatario"> 
+                                <h4 ng-model="usuario.Nome">{{usuario.Usuario.Nome}}</h4>
+                            </div>
                         </div>
                     </div>
                 </div>

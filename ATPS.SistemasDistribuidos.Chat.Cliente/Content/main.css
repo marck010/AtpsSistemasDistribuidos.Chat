@@ -1,3 +1,25 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+
+
 html {
     height: 100%;
 }
@@ -43,15 +65,19 @@ input {
 .aviso-indisponibilidade {
     position: absolute;
     top: 41%;
-     margin: auto; 
+    margin: auto;
     right: 33%;
 }
+
 h4 {
+    font-variant: small-caps;
+    font-style: normal;
 }
-    .aviso-indisponibilidade h2 {
-        text-align: center;
-        color: #5d5959;
-    }
+
+.aviso-indisponibilidade h2 {
+    text-align: center;
+    color: #5d5959;
+}
 
 .logo {
     width: 10%;
@@ -65,7 +91,6 @@ h4 {
     width: 100%;
     overflow: hidden;
     height: 100%;
-    /* background: linear-gradient(to bottom, #FFF, rgba(238, 241, 239, 0.77)); */
 }
 
 .view-content {
@@ -82,7 +107,6 @@ h4 {
     float: left;
     height: 100%;
     width: calc(30% - 2px);
-    /* background-color: #fff; */
     border-right: 1px solid #8aa1e8;
 }
 
@@ -115,8 +139,6 @@ h4 {
         background: #dde4f7;
         cursor: pointer;
         border-bottom: 1px solid #ebeaea;
-        /* border: 1px solid #ebeaea; */
-        /* border-left: 3px solid #d3d6d4; */
         height: 50px;
         margin-top: 5px;
         padding: 2px 2px 2px 5px;
@@ -125,11 +147,7 @@ h4 {
     .view-conversas .conversa-selecionada {
         width: 100%;
         cursor: pointer;
-        /* border-bottom: 1px solid #fffbfb; */
-        /* border: 1px solid #d2d2e0; */
-        /* border-left: 3px solid rgba(109, 107, 107, 0.65); */
         height: 50px;
-        /* margin: 5px 0px 5px 5px; */
         padding: 2px 0 4px 4px;
         background: linear-gradient(to right, #dde4f7,rgb(248, 249, 253));
     }
@@ -139,7 +157,6 @@ h4 {
         width: 44px;
         margin: 1px;
         border: 1px solid #ced6d2;
-        border-radius: 5px 0px 0px 0px;
         float: left;
     }
 
@@ -165,7 +182,6 @@ h4 {
     float: left;
     height: 100%;
     width: 100%;
-    /* background-color: #fff; */
 }
 
 .view-mensagens-admin {
@@ -189,7 +205,6 @@ h4 {
 
 
     .mensagens .mensagem-recebida {
-        /* border: solid 1px #c0c0cd; */
         border-radius: 3px;
         padding: 10px;
         margin-left: 23px;
@@ -203,7 +218,6 @@ h4 {
     }
 
     .mensagens .mensagem-enviada {
-        /* border: solid 1px #8fa5ea; */
         border-radius: 3px;
         padding: 10px;
         margin-right: 23px;
