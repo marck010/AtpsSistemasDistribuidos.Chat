@@ -91,5 +91,11 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
             
             return usuario;
         }
+
+        public void RemoverSessaoDoUsuario(Usuario usuario) 
+        {
+            usuario.UltimaSessaoWebSockets = null;
+            _repositorioUsuario.Atualizar(usuario);
+        }
     }
 }
