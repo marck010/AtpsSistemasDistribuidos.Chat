@@ -9,11 +9,11 @@ using ATPS.SistemasDistribuidos.Dominio.Excessoes;
 
 namespace ATPS.SistemasDistribuidos.Chat.Persistencia.Repositorios
 {
-    public class RepositorioUsuario: RepositorioBaseIntegrador<Usuario>, IRepositorioUsuario
+    public class RepositorioUsuario : RepositorioBaseIntegrador<Usuario>, IRepositorioUsuario
     {
         public IList<Usuario> UsuariosAguardandoAtendimento()
         {
-            return Todos().Where(x=>x.Disponivel && !x.Atendente).ToList();
+            return Todos().Where(x => x.Disponivel && !x.Atendente).ToList();
         }
 
         public IList<Usuario> AtendentesDisponiveis()
@@ -23,7 +23,7 @@ namespace ATPS.SistemasDistribuidos.Chat.Persistencia.Repositorios
 
         public Usuario ObterPorChave(string chave, bool naoPermitirNulo = false)
         {
-            var usuario = Todos().FirstOrDefault(u => u.ChaveAcesso== chave);
+            var usuario = Todos().SingleOrDefault(u => u.ChaveAcesso == chave);
 
             if (usuario == null && naoPermitirNulo)
             {
@@ -35,25 +35,13 @@ namespace ATPS.SistemasDistribuidos.Chat.Persistencia.Repositorios
 
         public Usuario ObterPorLogin(string login, bool naoPermitirNulo = false)
         {
-            var usuario = Todos().FirstOrDefault(u => u.Login == login);
-            
+            var usuario = Todos().SingleOrDefault(u => u.Login == login);
+
             if (usuario == null && naoPermitirNulo)
             {
                 throw new ValidacaoException("Usuário não encontrado");
             }
 
-            return usuario;
-        }
-
-        public Usuario ObterPorNome(string nome, bool naoPermitirNulo = false)
-        {
-            var usuario = Todos().FirstOrDefault(u => u.Nome == nome);
-           
-            if (usuario == null && naoPermitirNulo)
-            {
-                throw new ValidacaoException("Usuário não encontrado");
-            }
-            
             return usuario;
         }
     }

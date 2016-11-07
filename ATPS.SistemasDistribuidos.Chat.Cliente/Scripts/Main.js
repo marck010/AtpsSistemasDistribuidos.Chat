@@ -1,7 +1,9 @@
 ﻿var moduloChat = angular.module("ModuloChat", []);
 
-var urlWsHttp = "http://localhost:6100/";//"http://aptssd.ddns.net/SacWs";
-var urlWs = "ws://localhost:6100/";//"ws://aptssd.ddns.net/SacWs";
+//var urlWsHttp = "http://104.198.160.80/";
+//var urlWs = "ws://104.198.160.80/";
+var urlWsHttp = "http://localhost:6100/";
+var urlWs = "ws://localhost:6100/";
 
 
 function TratarErro(retorno, matarSessao) {
@@ -9,15 +11,22 @@ function TratarErro(retorno, matarSessao) {
     if (retorno.TipoErro == 1) {
         matarSessao();
     }
-    if (retorno.TipoErro == 3) {
+
+    else if (retorno.TipoErro == 3) {
         alert(retorno.Error);
     }
 
-    if (retorno.TipoErro == 2) {
+    else if (retorno.TipoErro == 2) {
+        alert("Ocorreu um erro inesperado");
+    }
+    else {
         alert("Ocorreu um erro inesperado");
     }
 
-    matarSessao();
+    if (typeof (matarSessao) == "function") {
+        matarSessao();
+    }
 
+    console.log(retorno);
 }
 

@@ -10,6 +10,10 @@ moduloChat.factory('$webSocket', function () {
         }
     }
 
+    var Desconectar = function (chaveAcesso) {
+        webSockets.close();
+    }
+
     var OnOpen = function (onopen) {
         webSockets.onopen = onopen;
     };
@@ -59,6 +63,7 @@ moduloChat.factory('$webSocket', function () {
 
     return {
         Conectar: Conectar,
+        Desconectar: Desconectar,
         OnOpen: OnOpen,
         OnError: OnError,
         OnMessage: OnMessage,

@@ -10,7 +10,7 @@ namespace ATPS.SistemasDistribuidos.Dominio.Excessoes
     {
         public List<String> ListaMensagens { get; set; }
 
-        public ValidacaoException(string mensgem)
+        public ValidacaoException(string mensgem):base(mensgem)
         {
             ListaMensagens = new List<string>();
             ListaMensagens.Add(mensgem);

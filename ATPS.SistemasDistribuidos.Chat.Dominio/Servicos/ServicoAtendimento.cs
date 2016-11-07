@@ -38,10 +38,10 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
 
                     usuarioRemetente.Atendimentos.Add(atendimento);
                     usuarioDestinatario.Atendimentos.Add(atendimento);
+                    
+                    _servicoUsuario.Atualizar(usuarioDestinatario.Id, usuarioDestinatario.Nome, usuarioDestinatario.Email, usuarioDestinatario.Telefone);
+                    _servicoUsuario.Atualizar(usuarioRemetente.Id, usuarioRemetente.Nome, usuarioRemetente.Email, usuarioRemetente.Telefone);
 
-                    _servicoUsuario.Atualizar(usuarioDestinatario.Id, usuarioDestinatario.Nome, usuarioDestinatario.Email, usuarioDestinatario.Telefone, disponivel: false);
-                    _servicoUsuario.Atualizar(usuarioRemetente.Id, usuarioRemetente.Nome, usuarioRemetente.Email, usuarioRemetente.Telefone, disponivel: false);
-                
                 }
 
                 return atendimento;

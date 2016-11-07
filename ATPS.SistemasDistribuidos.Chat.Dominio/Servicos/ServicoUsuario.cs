@@ -39,12 +39,6 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
             return usuario;
         }
 
-        public Usuario ObterPorNome(string nome, bool naoPermitirNulo = false)
-        {
-            var usuario = _repositorioUsuario.ObterPorNome(nome, naoPermitirNulo);
-            return usuario;
-        }
-
         public Usuario ConectarUsuario(string chaveAcesso, string chaveSessao)
         {
             var usuarioSalvo = _repositorioUsuario.ObterPorChave(chaveAcesso);
@@ -74,13 +68,17 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
         public Usuario Inserir(string nome, string email, string telefone)
         {
             var novoUsuario = new Usuario(nome, email, telefone, atendente: false);
+
             _repositorioUsuario.Inserir(novoUsuario);
+     
             return novoUsuario;
         }
 
-        public Usuario Atualizar(int id, string nome, string email, string telefone, bool disponivel)
+        public Usuario Atualizar(int id, string nome, string email, string telefone)
         {
             var usuario = _repositorioUsuario.Obter(id);
+
+            var disponivel = !usuario.Atendente ? false : true;
 
             usuario.Nome = nome;
             usuario.Email = email;

@@ -24,7 +24,7 @@ namespace ATPS.SistemasDistribuidos.Chat.Dominio.Entidades
 
             if (String.IsNullOrWhiteSpace(Senha))
             {
-                erros.Add("O Senha deve ser informado.");
+                erros.Add("A Senha deve ser informada.");
             }
 
             if (Usuario == null)

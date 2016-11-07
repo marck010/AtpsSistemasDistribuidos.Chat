@@ -13,6 +13,5 @@ namespace ATPS.SistemasDistribuidos.Chat.Dominio.Interfaces.Repositorios
         IList<Usuario> AtendentesDisponiveis();
         Usuario ObterPorChave(string chave, bool naoPermitirNulo = false);
         Usuario ObterPorLogin(string login, bool naoPermitirNulo = false);
-        Usuario ObterPorNome(string nome, bool naoPermitirNulo = false);
     }
 }

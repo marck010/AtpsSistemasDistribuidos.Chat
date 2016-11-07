@@ -9,6 +9,7 @@ moduloChat.controller('AtendenteController', function ($scope, $http, $webSocket
     $scope.Chat.Conversa.Mensagens = [];
     $scope.Chat.AtendimentoSelecionado = false;
     $scope.Chat.Conectado = false;
+    $scope.Chat.Cadastro = false;
 
     function Init() {
 
@@ -16,24 +17,28 @@ moduloChat.controller('AtendenteController', function ($scope, $http, $webSocket
         if (remetente) {
             $scope.Chat.Remetente.Nome = remetente.Nome;
             $scope.Chat.Remetente.ChaveAcesso = remetente.ChaveAcesso;
-            $scope.Chat.ConectarDesconectar();
+            $scope.Chat.Conectar();
         }
         else {
             $scope.Chat.Conectado = false;
         }
     }
 
+    $scope.Chat.AbrirFormularioCadastro = function () {
+        $scope.Chat.Cadastro = true;
+    };
+
     $scope.Chat.Cadastrar = function () {
-        if ($scope.Chat.Remetente.Senha != $scope.Chat.Remetente.ConfirmarSenha) {
+        if ($scope.Chat.NovoAtendente.Senha != $scope.Chat.NovoAtendente.ConfirmarSenha) {
             alert("Senhas não correspondem");
             return;
         }
         var parametros = {
-            Nome: $scope.Chat.Remetente.Nome,
-            Email: $scope.Chat.Remetente.Email,
-            Telefone: $scope.Chat.Remetente.Telefone,
-            Login: $scope.Chat.Remetente.Login,
-            Senha: $scope.Chat.Remetente.Senha
+            Nome: $scope.Chat.NovoAtendente.Nome,
+            Email: $scope.Chat.NovoAtendente.Email,
+            Telefone: $scope.Chat.NovoAtendente.Telefone,
+            Login: $scope.Chat.NovoAtendente.Login,
+            Senha: $scope.Chat.NovoAtendente.Senha
         };
 
         $http({
@@ -44,12 +49,46 @@ moduloChat.controller('AtendenteController', function ($scope, $http, $webSocket
                 'Content-Type': 'application/json'
             }
         }).success(function (data) {
-            $scope.Chat.Remetente.ChaveAcesso = data.ChaveAcesso;
-            $scope.Chat.ConectarDesconectar();
+            alert("Atendente cadastrado com sucesso.");
+            $scope.Chat.NovoAtendente.Nome = "";
+            $scope.Chat.NovoAtendente.Email = "";
+            $scope.Chat.NovoAtendente.Telefone = "";
+            $scope.Chat.NovoAtendente.Login = "";
+            $scope.Chat.NovoAtendente.Senha = "";
+            $scope.Chat.NovoAtendente.ConfirmarSenha = "";
+            $scope.Chat.Cadastro = false;
+        }).error(function (data) {
+            TratarErro(data)
         });
     };
 
-    $scope.Chat.ConectarDesconectar = function () {
+    $scope.Chat.Logar = function () {
+        if (!$scope.Chat.Remetente.Senha || !$scope.Chat.Remetente.Login) {
+            alert("Usuário e senha obrigatório.");
+            return;
+        }
+        var parametros = {
+            Login: $scope.Chat.Remetente.Login,
+            Senha: $scope.Chat.Remetente.Senha
+        };
+
+        $http({
+            url: urlWsHttp + "Chat/AutenticarAtendente",
+            method: "POST",
+            data: JSON.stringify(parametros),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).success(function (data) {
+            $scope.Chat.Remetente.ChaveAcesso = data.ChaveAcesso;
+            $scope.Chat.Conectar();
+        }).error(function (data) {
+            TratarErro(data, matarSessao)
+        });
+    };
+
+
+    $scope.Chat.Conectar = function () {
         $sessionStorage.SetItem("Remetente", $scope.Chat.Remetente);
         $webSocket.Conectar($scope.Chat.Remetente.ChaveAcesso);
 
@@ -58,6 +97,7 @@ moduloChat.controller('AtendenteController', function ($scope, $http, $webSocket
             var retorno = JSON.parse(mensagem.data);
             if (retorno.Error) {
                 TratarErro(retorno, matarSessao)
+                $scope.$apply();
                 return;
             }
 
@@ -76,10 +116,18 @@ moduloChat.controller('AtendenteController', function ($scope, $http, $webSocket
         });
 
         $webSocket.OnClose(function () {
-            alert("Por favor tente se conectar novamente");
             matarSessao();
+            $scope.Chat.Conectado = false;
+            $scope.$apply();
         });
     };
+
+    $scope.Chat.Desconectar = function () {
+        $webSocket.Desconectar();
+        $scope.Chat.Cadastro = false;
+
+    };
+
 
     $scope.Chat.SelecionarDestinatario = function (atendimentoSelecionado) {
 
@@ -95,7 +143,9 @@ moduloChat.controller('AtendenteController', function ($scope, $http, $webSocket
             $scope.Chat.Conversa = atendimentoSelecionado.Conversa;
         } else {
             $scope.Chat.Conversa = {};
+            $scope.Chat.Conversa.Mensagens = [];
         }
+
         $scope.Chat.Cliente = atendimentoSelecionado.Usuario;
 
     };
@@ -139,8 +189,8 @@ moduloChat.controller('AtendenteController', function ($scope, $http, $webSocket
     function matarSessao() {
         $sessionStorage.RemoveItem("Remetente");
         $scope.Chat.Conectado = false;
-        $scope.$apply();
     }
+
     Init();
 
 })

@@ -37,6 +37,7 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
             if (webSocketClient == null)
             {
                 webSocketClient = new WebSocketCollection();
+
             }
         }
 
@@ -75,13 +76,14 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
                 else
                 {
                     var atendentesDisponiveis = _servicoUsuario.AtendentesDisponiveis();
+                    var atendimento = usuarioConectado.Atendimentos.OrderBy(x => x.DataHora).LastOrDefault();
 
                     foreach (var atendenteDisponivel in atendentesDisponiveis)
                     {
-                        EnviarMensagemClienteWebSockets(usuarioConectado, atendenteDisponivel);
+                        var atendimentoIniciado = atendenteDisponivel.Atendimentos.LastOrDefault(x => x.Atendente.Usuario.Login == atendenteDisponivel.Login);
+                        EnviarMensagem(usuarioConectado, atendenteDisponivel, atendimentoIniciado);
                     }
 
-                    var atendimento = usuarioConectado.Atendimentos.OrderBy(x => x.DataHora).LastOrDefault();
                     if (atendimento != null)
                     {
                         var objetoRespostaCliente = ObjetoResposta(atendimento.Atendente.Usuario, atendimento);
@@ -138,7 +140,7 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
 
                 var usuarioRementente = _servicoUsuario.ObterPorChave(_chaveAcesso);
 
-                EnviarMensagemClienteWebSockets(usuarioRementente, usuarioDestinatario);
+                EnviarMensagem(usuarioRementente, usuarioDestinatario, atendimento);
 
                 var objetoRespostaParaRemetente = ObjetoResposta(usuarioDestinatario, atendimento);
                 var responstaParaRemetente = JsonConvert.SerializeObject(objetoRespostaParaRemetente, _settings);
@@ -179,23 +181,35 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
                     Nome = usuario.Nome,
                     Login = usuario.Login
                 },
-                Conversa = conversa,
+                Conversa = conversa != null ? new
+                {
+                    Id = conversa.Id,
+                    Mensagens = conversa.Mensagens.Select(mensagem =>
+                                                        new
+                                                        {
+                                                            Texto = mensagem.Texto,
+                                                            Remetente = new
+                                                            {
+                                                                Nome = mensagem.Remetente.Nome,
+                                                                mensagem.Remetente.ChaveAcesso
+                                                            }
+                                                        }),
+                    Login = usuario.Login
+                } : null,
             };
             return objetoResposta;
         }
 
-        private bool EnviarMensagemClienteWebSockets(Usuario remetente, Usuario destinatario)
+        private bool EnviarMensagem(Usuario remetente, Usuario destinatario, Atendimento atendimentoIniciado)
         {
-            var atendimentoIniciado = destinatario.Atendimentos.LastOrDefault(x => x.ClienteUsuario.Login == remetente.Login);
-
             var objetoRespostaAtendente = ObjetoResposta(remetente, atendimentoIniciado);
 
             var respostaParaAtendente = JsonConvert.SerializeObject(objetoRespostaAtendente, _settings);
 
-            var sessaoAtendente = webSocketClient.SingleOrDefault(x => x.WebSocketContext.SecWebSocketKey == destinatario.UltimaSessaoWebSockets.ChaveClienteWebSokets);
-            if (sessaoAtendente != null)
+            var sessaoDestinatario = webSocketClient.SingleOrDefault(x => x.WebSocketContext.SecWebSocketKey == destinatario.UltimaSessaoWebSockets.ChaveClienteWebSokets);
+            if (sessaoDestinatario != null)
             {
-                sessaoAtendente.Send(respostaParaAtendente);
+                sessaoDestinatario.Send(respostaParaAtendente);
                 return true;
             }
             else
@@ -207,19 +221,19 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
 
         private void RetornarErro(Exception ex)
         {
-            var error = JsonConvert.SerializeObject(new { Error = ex.Message, TipoErro = TipoErroEnum.NaoTratado });
+            var error = JsonConvert.SerializeObject(new { Error = ex.Message, TipoErro = TipoErroEnum.NaoTratado, StackTrace = ex.StackTrace });
             this.Send(error);
         }
 
         private void RetornarErro(SessaoException ex)
         {
-            var error = JsonConvert.SerializeObject(new { Error = ex.Message, TipoErro = TipoErroEnum.SessaoExpirada });
+            var error = JsonConvert.SerializeObject(new { Error = ex.Message, TipoErro = TipoErroEnum.SessaoExpirada, StackTrace = ex.StackTrace });
             this.Send(error);
         }
 
         private void RetornarErro(ValidacaoException ex)
         {
-            var error = JsonConvert.SerializeObject(new { Error = ex.Message, TipoErro = TipoErroEnum.ErroTratado });
+            var error = JsonConvert.SerializeObject(new { Error = ex.Message, TipoErro = TipoErroEnum.ErroTratado, StackTrace = ex.StackTrace });
             this.Send(error);
         }
 

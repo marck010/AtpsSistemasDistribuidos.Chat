@@ -13,7 +13,7 @@ moduloChat.controller('ClienteController', function ($scope, $http, $webSocket, 
         if (remetente) {
             $scope.Chat.Remetente.Nome = remetente.Nome;
             $scope.Chat.Remetente.ChaveAcesso = remetente.ChaveAcesso;
-            $scope.Chat.ConectarDesconectar();
+            $scope.Chat.Conectar();
         }
     }
 
@@ -35,11 +35,14 @@ moduloChat.controller('ClienteController', function ($scope, $http, $webSocket, 
             }
         }).success(function (data) {
             $scope.Chat.Remetente.ChaveAcesso = data.ChaveAcesso;
-            $scope.Chat.ConectarDesconectar();
-        });
+            $scope.Chat.Conectar();
+        })
+        .error(function (data) {
+            TratarErro(data, matarSessao)
+        });;
     };
 
-    $scope.Chat.ConectarDesconectar = function () {
+    $scope.Chat.Conectar = function () {
         if ($scope.Chat.Remetente.ChaveAcesso) {
 
             $sessionStorage.SetItem("Remetente", $scope.Chat.Remetente);
@@ -52,6 +55,7 @@ moduloChat.controller('ClienteController', function ($scope, $http, $webSocket, 
                 if (retorno.Error) {
                     if (retorno.Error) {
                         TratarErro(retorno, matarSessao)
+                        $scope.$apply();
                         return;
                     }
                     return;
@@ -72,11 +76,17 @@ moduloChat.controller('ClienteController', function ($scope, $http, $webSocket, 
             });
 
             $webSocket.OnClose(function () {
-                alert("Por favor tente se conectar novamente");
                 $sessionStorage.RemoveItem("Remetente");
                 $scope.Chat.Conectado = false;
+                matarSessao();
+                $scope.$apply();
             });
         }
+    };
+
+    $scope.Chat.Desconectar = function () {
+        $webSocket.Desconectar();
+
     };
 
     $scope.Chat.Remetente.Enviar = function () {
@@ -104,7 +114,6 @@ moduloChat.controller('ClienteController', function ($scope, $http, $webSocket, 
     function matarSessao() {
         $sessionStorage.RemoveItem("Remetente");
         $scope.Chat.Conectado = false;
-        $scope.$apply();
     }
 
     Init();

@@ -18,10 +18,11 @@ using ATPS.SistemasDistribuidos.Chat.Dominio.Entidades;
 using ATPS.SistemasDistribuidos.Chat.WebService.Models;
 using Newtonsoft.Json;
 using System.Web.Mvc;
+using ATPS.SistemasDistribuidos.Chat.Controllers;
 
 namespace ATPS.SistemasDistribuidos.Chat.WebService.Controllers
 {
-    public class ChatController : Controller
+    public class ChatController : BaseController
     {
         public ChatController()
         {
@@ -46,7 +47,7 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.Controllers
         public JsonResult AutenticarAtendente(string login, string senha)
         {
             var usuarioAtendente = _atendenteServico.Autenticar(login, senha);
-            return Json(new { ChaveExterna = usuarioAtendente.Usuario.ChaveAcesso }, JsonRequestBehavior.AllowGet);
+            return Json(new { ChaveAcesso = usuarioAtendente.Usuario.ChaveAcesso }, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult CadastroCliente(PessoaModel cliente)

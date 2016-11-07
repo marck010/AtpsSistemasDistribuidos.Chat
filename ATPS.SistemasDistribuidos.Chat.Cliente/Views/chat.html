@@ -5,12 +5,15 @@
 
     <link rel="stylesheet" href="../Content/main.css" />
 </head>
-<body>
-    <div class="principal-container" ng-app="ModuloChat">
-        <div class="logo">
-            <img width="100%" src="../Content/Imagens/Logo-SAC-0800-Facil.jpg">
+<body ng-app="ModuloChat">
+    <div class="principal-container"  ng-controller="ClienteController">
+   
+        <div class="menu" ng-show="Chat.Conectado">
+            <div class="item-menu" ng-click="Chat.Desconectar()">
+                <span>Sair</span>
+            </div>
         </div>
-        <div class="view-content" ng-controller="ClienteController">
+        <div class="view-content" >
             <div class="box-cadastrar" ng-hide="Chat.Conectado">
                 <div class="form">
                     <h2>Bem vindo!!</h2>
@@ -36,7 +39,7 @@
                     <div class="mensagens">
                         <div class="mensagem" ng-repeat="mensagem in Chat.Atendente.Conversa.Mensagens">
                             <!--<span class="nome-remetente">{{mensagem.Remetente.Nome}}</span>-->
-                            <div ng-class="mensagem.Remetente.Nome == Chat.Remetente.Nome? 'mensagem-enviada': 'mensagem-recebida'" ng-model="mensagem.Texto">{{mensagem.Texto}}</div>
+                            <div ng-class="mensagem.Remetente.ChaveAcesso == Chat.Remetente.ChaveAcesso? 'mensagem-enviada': 'mensagem-recebida'" ng-model="mensagem.Texto">{{mensagem.Texto}}</div>
                         </div>
                     </div>
                     <div class="envio field-form" ng-show="Chat.Conectado">
@@ -49,12 +52,12 @@
         </div>
     </div>
 </body>
-<script type="text/javascript" src="/libs/angular.min.js"></script>
-<script type="text/javascript" src="/libs/angular-route.js"></script>
-<script type="text/javascript" src="/libs/jquery-2.1.4.min.js"></script>
-<script type="text/javascript" src="/libs/linq.js"></script>
-<script type="text/javascript" src="/Scripts/main.js"></script>
-<script type="text/javascript" src="/Scripts/ServicoS/WebSocketsServico.js"></script>
-<script type="text/javascript" src="/Scripts/Servicos/CacheObjetosServico.js"></script>
-<script type="text/javascript" src="/Controller/ClienteController.js"></script>
+<script type="text/javascript" src="../libs/angular.min.js"></script>
+<script type="text/javascript" src="../libs/angular-route.js"></script>
+<script type="text/javascript" src="../libs/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="../libs/linq.js"></script>
+<script type="text/javascript" src="../Scripts/Main.js"></script>
+<script type="text/javascript" src="../Scripts/Servicos/WebSocketsServico.js"></script>
+<script type="text/javascript" src="../Scripts/Servicos/CacheObjetosServico.js"></script>
+<script type="text/javascript" src="../Controller/ClienteController.js"></script>
 </html>

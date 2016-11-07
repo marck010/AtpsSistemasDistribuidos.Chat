@@ -18,7 +18,11 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
         public Atendente Inserir(string nome, string email, string telefone, string login, string senha) 
         {
             var atendente  = new Atendente(nome, email, telefone, login, senha);
-            
+            var atendenteComMesmoLogin = _repositorioAtendente.ObterPorLogin(login);
+            if (atendenteComMesmoLogin!=null)
+            {
+                throw new ValidacaoException("Já existe um atendente com esse login.");
+            }
             _repositorioAtendente.Inserir(atendente);
             _repositorioUsuario.Inserir(atendente.Usuario);
 
