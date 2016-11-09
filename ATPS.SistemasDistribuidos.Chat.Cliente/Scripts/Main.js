@@ -1,9 +1,9 @@
 ﻿var moduloChat = angular.module("ModuloChat", []);
 
-//var urlWsHttp = "http://104.198.160.80/";
-//var urlWs = "ws://104.198.160.80/";
-var urlWsHttp = "http://localhost:6100/";
-var urlWs = "ws://localhost:6100/";
+var urlwshttp = "http://146.148.78.240/";
+var urlws = "ws://146.148.78.240/";
+//var urlWsHttp = "http://localhost:6100/";
+//var urlWs = "ws://localhost:6100/";
 
 
 function TratarErro(retorno, matarSessao) {
