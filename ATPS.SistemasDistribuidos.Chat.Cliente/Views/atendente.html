@@ -12,10 +12,10 @@
             <img width="100%" src="../Content/Imagens/Logo-SAC-0800-Facil.jpg" />
         </div>
         <div class="menu" ng-show="Chat.Conectado">
-            <div class="item-menu" ng-click="Chat.Desconectar()">
+            <div class="item-menu"  ng-click="Chat.Desconectar()">
                 <span>Sair </span>
             </div>
-            <div class="item-menu" ng-click="Chat.AbrirFormularioCadastro()">
+            <div class="item-menu" ng-show="Chat.Remetente.Administrador" ng-click="Chat.AbrirFormularioCadastro()">
                 <span>Cadastrar Atendente</span>
             </div>
         </div>

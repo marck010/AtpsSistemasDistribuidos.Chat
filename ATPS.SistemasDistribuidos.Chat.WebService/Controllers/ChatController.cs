@@ -47,7 +47,7 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.Controllers
         public JsonResult AutenticarAtendente(string login, string senha)
         {
             var usuarioAtendente = _atendenteServico.Autenticar(login, senha);
-            return Json(new { ChaveAcesso = usuarioAtendente.Usuario.ChaveAcesso }, JsonRequestBehavior.AllowGet);
+            return Json(new { ChaveAcesso = usuarioAtendente.Usuario.ChaveAcesso, Administrador = usuarioAtendente.Administrador }, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult CadastroCliente(PessoaModel cliente)
@@ -62,7 +62,7 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.Controllers
 
         public JsonResult CadastroAtendente(PessoaModel atendente)
         {
-            var atendenteSalvo = _atendenteServico.Inserir(atendente.Nome, atendente.Email, atendente.Telefone, atendente.Login, atendente.Senha);
+            var atendenteSalvo = _atendenteServico.Inserir(atendente.Nome, atendente.Email, atendente.Telefone, atendente.Login, atendente.Senha, atendente.Administrador);
             var retorno = new
             {
                 ChaveAcesso = atendenteSalvo.Usuario.ChaveAcesso
@@ -77,7 +77,7 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.Controllers
             if (usuarioConectado.Atendente)
             {
                 var clientesAguardandoAtendimento = _usuarioServico.UsuariosAguardandoAtendimento();
-                retorno = clientesAguardandoAtendimento.Select(usuario=> ObjetoResposta(usuario,  usuario.Atendimentos.LastOrDefault(atendimento=>atendimento.Atendente.Usuario.ChaveAcesso == chaveAcesso))) ;
+                retorno = clientesAguardandoAtendimento.Select(usuario => ObjetoResposta(usuario, usuario.Atendimentos.LastOrDefault(atendimento => atendimento.Atendente.Usuario.ChaveAcesso == chaveAcesso)));
             }
             else
             {
@@ -85,7 +85,7 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.Controllers
                 var objetoResposta = ObjetoResposta(usuarioConectado);
                 var respostaParaRemetente = JsonConvert.SerializeObject(objetoResposta, _settings);
                 retorno = ObjetoResposta(usuarioLogado, usuarioLogado.Atendimentos.LastOrDefault(atendimento => atendimento.ClienteUsuario.ChaveAcesso == chaveAcesso));
-       
+
             }
             return Json(retorno, JsonRequestBehavior.AllowGet);
         }

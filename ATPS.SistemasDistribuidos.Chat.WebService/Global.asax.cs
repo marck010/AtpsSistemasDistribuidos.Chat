@@ -17,14 +17,12 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService
     {
         protected void Application_Start()
         {
+            var injetorDependencia = InjetorDependencia.Instancia;
+            ResolvedorDependenciaDominio.Instancia.Configurar(injetorDependencia);
+
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-
-            var injetorDependencia = InjetorDependencia.Instancia;
-
-            ResolvedorDependenciaDominio.Instancia.Configurar(injetorDependencia);
-
         }
     }
 }

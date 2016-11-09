@@ -13,6 +13,6 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
     {
         Atendente ObterPorChaveAcesso(string chave);
         Atendente Autenticar(string login, string senha);
-        Atendente Inserir(string nome, string email, string telefone, string login, string senha);
+        Atendente Inserir(string nome, string email, string telefone, string login, string senha, bool administrador = false);
     }
 }

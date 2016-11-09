@@ -1,8 +1,10 @@
 ﻿using ATPS.SistemasDistribuidos.Dominio.Excessoes;
+using ATPS.SistemasDistribuidos.Dominio.Servicos;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
@@ -11,6 +13,8 @@ namespace ATPS.SistemasDistribuidos.Chat.Controllers
 {
     public class BaseController : Controller
     {
+        public IServicoAtendente _servicoAtendente = IOC.InjetorDependencia.Instancia.Resolver<IServicoAtendente>();
+
         protected override void OnException(ExceptionContext exceptionContext)
         {
             if (exceptionContext.Exception is ValidacaoException)
@@ -18,18 +22,34 @@ namespace ATPS.SistemasDistribuidos.Chat.Controllers
                 exceptionContext.Result = RetornarErro((ValidacaoException)exceptionContext.Exception);
             }
 
-            if (exceptionContext.Exception is SessaoException)
+            else if (exceptionContext.Exception is SessaoException)
             {
                 exceptionContext.Result = RetornarErro((SessaoException)exceptionContext.Exception);
             }
 
-            if (exceptionContext.Exception is Exception)
+            else if (exceptionContext.Exception is Exception)
             {
                 exceptionContext.Result = RetornarErro(exceptionContext.Exception);
             }
-            
-            base.OnException(exceptionContext);
+
+            exceptionContext.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            exceptionContext.ExceptionHandled = true;
         
+        }
+
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            if (filterContext.ActionDescriptor.ActionName == "CadastroAtendente")
+            {
+                var chaveAcesso = filterContext.RequestContext.HttpContext.Request.Headers["ChaveAcesso"];
+                var atendente = _servicoAtendente.ObterPorChaveAcesso(chaveAcesso);
+                if (atendente == null || !atendente.Administrador)
+                {
+                    //throw new ValidacaoException("Usuário não autorizado para está ação.");
+                }
+            }
+            
+            base.OnActionExecuting(filterContext);
         }
 
         private JsonResult RetornarErro(ValidacaoException ex)

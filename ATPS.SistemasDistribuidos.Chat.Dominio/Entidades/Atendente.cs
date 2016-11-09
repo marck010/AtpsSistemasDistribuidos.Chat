@@ -8,15 +8,17 @@ namespace ATPS.SistemasDistribuidos.Chat.Dominio.Entidades
 {
     public class Atendente : EntidadeBase
     {
-        public Atendente(string nome, string email, string telefone, string login, string senha)
+        public Atendente(string nome, string email, string telefone, string login, string senha, bool administrador = false)
         {
             Usuario = new Usuario(nome, email, telefone, atendente: true, login: login);
             Senha = senha;
+            Administrador = administrador;
         }
 
         public string Foto { get; set; }
         public string Senha { get; set; }
         public Usuario Usuario { get; set; }
+        public bool Administrador { get; set; }
 
         public override void Validar()
         {

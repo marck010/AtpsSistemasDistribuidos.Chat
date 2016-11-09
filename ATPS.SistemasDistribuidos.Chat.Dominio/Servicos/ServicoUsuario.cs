@@ -16,7 +16,6 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
         private readonly IRepositorioSessaoWebSockets _repositorioSessaoWebSockets = ResolvedorDependenciaDominio.Instancia.Resolver<IRepositorioSessaoWebSockets>();
         private readonly IServicoSessaoWebSockets _servicoSessaoWebSockets = ResolvedorDependenciaDominio.Instancia.Resolver<IServicoSessaoWebSockets>();
 
-
         public IList<Usuario> UsuariosAguardandoAtendimento()
         {
             return _repositorioUsuario.UsuariosAguardandoAtendimento();

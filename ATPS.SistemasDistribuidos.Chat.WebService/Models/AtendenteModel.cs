@@ -12,5 +12,6 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.Models
         public string Telefone { get; set; }
         public string Login { get; set; }
         public string Senha { get; set; }
+        public bool Administrador{ get; set; }
     }
 }

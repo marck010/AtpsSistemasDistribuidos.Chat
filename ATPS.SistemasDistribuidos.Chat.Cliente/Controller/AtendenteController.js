@@ -4,6 +4,7 @@ moduloChat.controller('AtendenteController', function ($scope, $http, $webSocket
     $scope.Chat = {};
     $scope.Chat.Atendimentos = [];
     $scope.Chat.Remetente = {};
+    $scope.Chat.NovoAtendente = {};
     $scope.Chat.Cliente = {};
     $scope.Chat.Conversa = {};
     $scope.Chat.Conversa.Mensagens = [];
@@ -17,6 +18,7 @@ moduloChat.controller('AtendenteController', function ($scope, $http, $webSocket
         if (remetente) {
             $scope.Chat.Remetente.Nome = remetente.Nome;
             $scope.Chat.Remetente.ChaveAcesso = remetente.ChaveAcesso;
+            $scope.Chat.Remetente.Administrador = remetente.Administrador;
             $scope.Chat.Conectar();
         }
         else {
@@ -38,7 +40,7 @@ moduloChat.controller('AtendenteController', function ($scope, $http, $webSocket
             Email: $scope.Chat.NovoAtendente.Email,
             Telefone: $scope.Chat.NovoAtendente.Telefone,
             Login: $scope.Chat.NovoAtendente.Login,
-            Senha: $scope.Chat.NovoAtendente.Senha
+            Senha: $scope.Chat.NovoAtendente.Senha,
         };
 
         $http({
@@ -46,7 +48,8 @@ moduloChat.controller('AtendenteController', function ($scope, $http, $webSocket
             method: "POST",
             data: JSON.stringify(parametros),
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'ChaveAcesso': $scope.Chat.Remetente.ChaveAcesso,
             }
         }).success(function (data) {
             alert("Atendente cadastrado com sucesso.");
@@ -81,6 +84,7 @@ moduloChat.controller('AtendenteController', function ($scope, $http, $webSocket
             }
         }).success(function (data) {
             $scope.Chat.Remetente.ChaveAcesso = data.ChaveAcesso;
+            $scope.Chat.Remetente.Administrador = data.Administrador;
             $scope.Chat.Conectar();
         }).error(function (data) {
             TratarErro(data, matarSessao)
@@ -91,35 +95,36 @@ moduloChat.controller('AtendenteController', function ($scope, $http, $webSocket
     $scope.Chat.Conectar = function () {
         $sessionStorage.SetItem("Remetente", $scope.Chat.Remetente);
         $webSocket.Conectar($scope.Chat.Remetente.ChaveAcesso);
+        if ($webSocket.ConexaoAberta()) {
+            $webSocket.OnMessage(function (mensagem) {
 
-        $webSocket.OnMessage(function (mensagem) {
+                var retorno = JSON.parse(mensagem.data);
+                if (retorno.Error) {
+                    TratarErro(retorno, matarSessao)
+                    $scope.$apply();
+                    return;
+                }
 
-            var retorno = JSON.parse(mensagem.data);
-            if (retorno.Error) {
-                TratarErro(retorno, matarSessao)
+                listarAtendimentos(retorno);
                 $scope.$apply();
-                return;
-            }
 
-            listarAtendimentos(retorno);
-            $scope.$apply();
+            });
 
-        });
+            $webSocket.OnOpen(function () {
+                $scope.Chat.Conectado = true;
+                $scope.$apply();
+            });
 
-        $webSocket.OnOpen(function () {
-            $scope.Chat.Conectado = true;
-            $scope.$apply();
-        });
+            $webSocket.OnError(function () {
+                alert("Ocorreu um erro na conexão.");
+            });
 
-        $webSocket.OnError(function () {
-            alert("Ocorreu um erro na conexão.");
-        });
-
-        $webSocket.OnClose(function () {
-            matarSessao();
-            $scope.Chat.Conectado = false;
-            $scope.$apply();
-        });
+            $webSocket.OnClose(function () {
+                matarSessao();
+                $scope.Chat.Conectado = false;
+                $scope.$apply();
+            });
+        }
     };
 
     $scope.Chat.Desconectar = function () {

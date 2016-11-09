@@ -15,9 +15,9 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
         private readonly IRepositorioAtendente _repositorioAtendente = ResolvedorDependenciaDominio.Instancia.Resolver<IRepositorioAtendente>();
         private readonly IRepositorioUsuario _repositorioUsuario = ResolvedorDependenciaDominio.Instancia.Resolver<IRepositorioUsuario>();
 
-        public Atendente Inserir(string nome, string email, string telefone, string login, string senha) 
+        public Atendente Inserir(string nome, string email, string telefone, string login, string senha, bool administrador = false) 
         {
-            var atendente  = new Atendente(nome, email, telefone, login, senha);
+            var atendente = new Atendente(nome, email, telefone, login, senha, administrador);
             var atendenteComMesmoLogin = _repositorioAtendente.ObterPorLogin(login);
             if (atendenteComMesmoLogin!=null)
             {

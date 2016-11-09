@@ -34,7 +34,7 @@ moduloChat.factory('$webSocket', function () {
 
     var Enviar = function (login, mensagem, idAtendimento) {
 
-        if (ConexaoAberta()) {
+        if (conexaoAberta()) {
 
             var objetoMensagem = {};
             if (idAtendimento) {
@@ -48,7 +48,11 @@ moduloChat.factory('$webSocket', function () {
 
     }
 
-    function ConexaoAberta() {
+    var ConexaoAberta  = function () {
+        return !!webSockets;
+    }
+
+    function conexaoAberta() {
         return webSockets.readyState == WebSocket.OPEN;
     }
 
@@ -68,6 +72,7 @@ moduloChat.factory('$webSocket', function () {
         OnError: OnError,
         OnMessage: OnMessage,
         OnClose: OnClose,
+        ConexaoAberta: ConexaoAberta,
         Enviar: Enviar
     }
 });
