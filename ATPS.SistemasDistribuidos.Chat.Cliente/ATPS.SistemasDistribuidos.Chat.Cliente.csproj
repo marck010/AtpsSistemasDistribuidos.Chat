@@ -48,7 +48,6 @@
     <Content Include="Content\Imagens\Logo-SAC-0800-Facil.jpg" />
     <Content Include="Content\Imagens\nobody_m.original.jpg" />
     <Content Include="Content\main.css" />
-    <Content Include="Controller\AtendenteController1.js" />
     <Content Include="Controller\ClienteController.js" />
     <Content Include="Controller\AtendenteController.js" />
     <Content Include="libs\angular-route.js" />
@@ -58,7 +57,6 @@
     <Content Include="Scripts\Main.js" />
     <Content Include="Scripts\Servicos\CacheObjetosServico.js" />
     <Content Include="Scripts\Servicos\WebSocketsServico.js" />
-    <Content Include="Views\cadastro-atendente.html" />
     <Content Include="Views\chat.html" />
     <Content Include="Views\atendente.html" />
     <Content Include="Web.config" />
