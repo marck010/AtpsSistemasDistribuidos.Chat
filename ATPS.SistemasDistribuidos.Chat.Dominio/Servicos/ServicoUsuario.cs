@@ -21,7 +21,7 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
             return _repositorioUsuario.UsuariosAguardandoAtendimento();
         }
 
-        public IList<Usuario> AtendentesDisponiveis() 
+        public IList<Usuario> AtendentesDisponiveis()
         {
             return _repositorioUsuario.AtendentesDisponiveis();
         }
@@ -69,7 +69,7 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
             var novoUsuario = new Usuario(nome, email, telefone, atendente: false);
 
             _repositorioUsuario.Inserir(novoUsuario);
-     
+
             return novoUsuario;
         }
 
@@ -85,12 +85,13 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
             usuario.Disponivel = disponivel;
 
             _repositorioUsuario.Atualizar(usuario);
-            
+
             return usuario;
         }
 
-        public void RemoverSessaoDoUsuario(Usuario usuario) 
+        public void RemoverSessaoDoUsuario(Usuario usuario)
         {
+            //usuario.ChaveAcesso = null;
             usuario.UltimaSessaoWebSockets = null;
             _repositorioUsuario.Atualizar(usuario);
         }

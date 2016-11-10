@@ -66,6 +66,7 @@ moduloChat.controller('AtendenteController', function ($scope, $http, $webSocket
     };
 
     $scope.Chat.Logar = function () {
+
         if (!$scope.Chat.Remetente.Senha || !$scope.Chat.Remetente.Login) {
             alert("Usuário e senha obrigatório.");
             return;
@@ -192,6 +193,8 @@ moduloChat.controller('AtendenteController', function ($scope, $http, $webSocket
     }
 
     function matarSessao() {
+        $scope.Chat.Atendimentos = [];
+        $scope.Chat.Conversa.Mensagens = [];
         $sessionStorage.RemoveItem("Remetente");
         $scope.Chat.Conectado = false;
     }

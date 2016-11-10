@@ -28,7 +28,6 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
 
         #region Construtores
 
-        #endregion
         public WebSockets(string chaveAcesso)
         {
             _chaveAcesso = chaveAcesso;
@@ -40,6 +39,8 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
 
             }
         }
+
+        #endregion
 
         #region Eventos
 
@@ -80,7 +81,7 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
 
                     foreach (var atendenteDisponivel in atendentesDisponiveis)
                     {
-                        var atendimentoIniciado = atendenteDisponivel.Atendimentos.LastOrDefault(x => x.Atendente.Usuario.Login == atendenteDisponivel.Login);
+                        var atendimentoIniciado = atendenteDisponivel.Atendimentos.LastOrDefault(x => x.Atendente.Usuario.Login == usuarioConectado.Login);
                         EnviarMensagem(usuarioConectado, atendenteDisponivel, atendimentoIniciado);
                     }
 
@@ -95,17 +96,15 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
             }
             catch (SessaoException ex)
             {
-                WebSocketContext.WebSocket.Abort();
+                webSocketClient.Remove(this);
                 RetornarErro(ex);
             }
             catch (ValidacaoException ex)
             {
-                WebSocketContext.WebSocket.Abort();
                 RetornarErro(ex);
             }
             catch (Exception ex)
             {
-                WebSocketContext.WebSocket.Abort();
                 RetornarErro(ex);
             }
         }
@@ -127,13 +126,11 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
 
                 Usuario usuarioDestinatario;
 
-                try
+                usuarioDestinatario = _servicoUsuario.ObterPorLogin(mensagem.Destinatario.Login);
+
+                if (usuarioDestinatario == null)
                 {
-                    usuarioDestinatario = _servicoUsuario.ObterPorLogin(mensagem.Destinatario.Login, naoPermitirNulo: true);
-                }
-                catch (ValidacaoException)
-                {
-                    throw new ValidacaoException("Destinatário não encontrado");
+                    throw new ValidacaoException("Destinatário não encontrado.");
                 }
 
                 var atendimento = _servicoAtendimento.SalvarAtualizarAtendimento(_chaveAcesso, usuarioDestinatario, mensagem.Texto, mensagem.Atendimento);
@@ -149,6 +146,7 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
             }
             catch (SessaoException ex)
             {
+                webSocketClient.Remove(this);
                 RetornarErro(ex);
             }
             catch (ValidacaoException ex)
@@ -164,6 +162,10 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
 
         public override void OnClose()
         {
+            var destinatario = _servicoUsuario.ObterPorChave(_chaveAcesso);
+            _servicoUsuario.RemoverSessaoDoUsuario(destinatario);
+            webSocketClient.Remove(this);
+
             base.OnClose();
         }
 
@@ -200,22 +202,27 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
             return objetoResposta;
         }
 
-        private bool EnviarMensagem(Usuario remetente, Usuario destinatario, Atendimento atendimentoIniciado)
+        private void EnviarMensagem(Usuario remetente, Usuario destinatario, Atendimento atendimentoIniciado)
         {
             var objetoRespostaAtendente = ObjetoResposta(remetente, atendimentoIniciado);
 
             var respostaParaAtendente = JsonConvert.SerializeObject(objetoRespostaAtendente, _settings);
+            if (destinatario.UltimaSessaoWebSockets != null)
+            {
+                var sessaoDestinatario = webSocketClient.SingleOrDefault(x => x.WebSocketContext.SecWebSocketKey == destinatario.UltimaSessaoWebSockets.ChaveClienteWebSokets);
 
-            var sessaoDestinatario = webSocketClient.SingleOrDefault(x => x.WebSocketContext.SecWebSocketKey == destinatario.UltimaSessaoWebSockets.ChaveClienteWebSokets);
-            if (sessaoDestinatario != null)
-            {
-                sessaoDestinatario.Send(respostaParaAtendente);
-                return true;
+                if (sessaoDestinatario != null)
+                {
+                    sessaoDestinatario.Send(respostaParaAtendente);
+                }
+                else
+                {
+                    _servicoUsuario.RemoverSessaoDoUsuario(destinatario);
+                }
             }
-            else
+            if (destinatario.UltimaSessaoWebSockets == null)
             {
-                _servicoUsuario.RemoverSessaoDoUsuario(destinatario);
-                return false;
+                throw new ValidacaoException("Destinatario não conectado.");
             }
         }
 
@@ -238,6 +245,8 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
         }
 
         #endregion
+
+
 
         private JsonSerializerSettings ConfigurarSerializacao()
         {

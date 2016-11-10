@@ -112,6 +112,8 @@ moduloChat.controller('ClienteController', function ($scope, $http, $webSocket, 
     }
 
     function matarSessao() {
+
+        $scope.Chat.Conversa.Mensagens = [];
         $sessionStorage.RemoveItem("Remetente");
         $scope.Chat.Conectado = false;
     }
