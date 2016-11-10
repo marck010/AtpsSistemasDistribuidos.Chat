@@ -19,6 +19,8 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
         {
             var atendente = new Atendente(nome, email, telefone, login, senha, administrador);
             var atendenteComMesmoLogin = _repositorioAtendente.ObterPorLogin(login);
+
+
             if (atendenteComMesmoLogin!=null)
             {
                 throw new ValidacaoException("Já existe um atendente com esse login.");
@@ -37,6 +39,23 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
                 throw new ValidacaoException("Usuario ou senha inválidos");
             }
             return atendente;
+        }
+
+        public void AdicionarAdministradorSeNaoExistir()
+        {
+            string nome = "Administrador", email = "administrador@sac.com.br", telefone = "88889999", login = "administrador", senha = "123456";
+            bool administrador = true;
+
+            var atendentes = _repositorioAtendente.Todos();
+
+            if (!atendentes.Any())
+            {
+                var atendente = new Atendente(nome, email, telefone, login, senha, administrador);
+
+                _repositorioAtendente.Inserir(atendente);
+                _repositorioUsuario.Inserir(atendente.Usuario);
+            }
+  
         }
         
         public Atendente ObterPorChaveAcesso(string chave)

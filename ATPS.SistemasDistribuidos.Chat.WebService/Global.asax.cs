@@ -1,5 +1,6 @@
 ﻿using ATPS.SistemasDistribuidos.Chat.IOC;
 using ATPS.SistemasDistribuidos.Dominio.IOC;
+using ATPS.SistemasDistribuidos.Dominio.Servicos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,10 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService
         {
             var injetorDependencia = InjetorDependencia.Instancia;
             ResolvedorDependenciaDominio.Instancia.Configurar(injetorDependencia);
+
+            var _servicoAtendimento = ResolvedorDependenciaDominio.Instancia.Resolver<IServicoAtendente>();
+            
+            _servicoAtendimento.AdicionarAdministradorSeNaoExistir();
 
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
