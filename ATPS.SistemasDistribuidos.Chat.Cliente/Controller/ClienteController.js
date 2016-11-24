@@ -86,7 +86,6 @@ moduloChat.controller('ClienteController', function ($scope, $http, $webSocket, 
 
     $scope.Chat.Desconectar = function () {
         $webSocket.Desconectar();
-
         $scope.Chat.Atendente = null;
         $scope.Chat.Conversa.Mensagens = [];
     };
@@ -111,12 +110,17 @@ moduloChat.controller('ClienteController', function ($scope, $http, $webSocket, 
     };
 
     function listarAtendimentos(retorno) {
-        if (!$scope.Chat.Atendente) {
-            $scope.Chat.Atendente = retorno;
+        if (!retorno.UsuarioDesconectado) {
+            if (!$scope.Chat.Atendente) {
+                $scope.Chat.Atendente = retorno;
+            }
+            else {
+                $scope.Chat.Atendente.Conversa = retorno.Conversa;
+            }
+        } else {
+            $scope.Chat.Atendente = null;
         }
-        else {
-            $scope.Chat.Atendente.Conversa = retorno.Conversa;
-        }
+
     }
 
     function matarSessao() {

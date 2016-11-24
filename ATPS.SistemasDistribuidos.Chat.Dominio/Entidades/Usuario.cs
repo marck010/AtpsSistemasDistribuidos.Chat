@@ -31,7 +31,7 @@ namespace ATPS.SistemasDistribuidos.Chat.Dominio.Entidades
         public bool Atendente { get; set; }
         public bool Disponivel { get; set; }
 
-        public SessaoClienteWebSockets UltimaSessaoWebSockets { get; set; }
+        public SessaoClienteWebSockets SessaoWebSocketsAtiva { get; set; }
 
         public List<Atendimento> Atendimentos { get; set; }
 

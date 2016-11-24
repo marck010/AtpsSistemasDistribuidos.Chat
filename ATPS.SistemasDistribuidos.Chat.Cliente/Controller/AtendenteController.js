@@ -92,7 +92,6 @@ moduloChat.controller('AtendenteController', function ($scope, $http, $webSocket
         });
     };
 
-
     $scope.Chat.Conectar = function () {
         $sessionStorage.SetItem("Remetente", $scope.Chat.Remetente);
         $webSocket.Conectar($scope.Chat.Remetente.ChaveAcesso);
@@ -186,7 +185,15 @@ moduloChat.controller('AtendenteController', function ($scope, $http, $webSocket
             });
 
             if (atendimentoEmAndamento) {
-                if (retorno.Conversa) {
+                if (retorno.UsuarioDesconectado) {
+                  var atendimentos =   Enumerable.From($scope.Chat.Atendimentos).ToDictionary();
+                  atendimentos.Remove(atendimentoEmAndamento);
+                  $scope.Chat.Atendimentos = atendimentos.ToEnumerable().Select(function (item) {
+                                                                                  return item.Key;
+                                                                              }).ToArray();
+                  $scope.Chat.Conversa.Mensagens = [];
+                }
+                else if (retorno.Conversa) {
                     atendimentoEmAndamento.Conversa = retorno.Conversa;
                     if (atendimentoEmAndamento.Selecionado) {
                         $scope.Chat.Conversa = atendimentoEmAndamento.Conversa;

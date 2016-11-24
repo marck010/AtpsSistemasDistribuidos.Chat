@@ -47,17 +47,17 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
             }
             usuarioSalvo.Disponivel = true;
 
-            if (usuarioSalvo.UltimaSessaoWebSockets != null)
+            if (usuarioSalvo.SessaoWebSocketsAtiva != null)
             {
-                if (usuarioSalvo.UltimaSessaoWebSockets.ChaveClienteWebSokets != chaveSessao)
+                if (usuarioSalvo.SessaoWebSocketsAtiva.ChaveClienteWebSokets != chaveSessao)
                 {
-                    usuarioSalvo.UltimaSessaoWebSockets.ChaveClienteWebSokets = chaveSessao;
+                    usuarioSalvo.SessaoWebSocketsAtiva.ChaveClienteWebSokets = chaveSessao;
                 }
             }
             else
             {
                 var sessaoSalva = _servicoSessaoWebSockets.Inserir(chaveSessao, usuarioSalvo);
-                usuarioSalvo.UltimaSessaoWebSockets = sessaoSalva;
+                usuarioSalvo.SessaoWebSocketsAtiva = sessaoSalva;
             }
 
             _repositorioUsuario.Atualizar(usuarioSalvo);
@@ -92,7 +92,7 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
         public void RemoverSessaoDoUsuario(Usuario usuario)
         {
             //usuario.ChaveAcesso = null;
-            usuario.UltimaSessaoWebSockets = null;
+            usuario.SessaoWebSocketsAtiva = null;
             _repositorioUsuario.Atualizar(usuario);
         }
     }

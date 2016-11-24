@@ -56,41 +56,12 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
 
                 if (usuarioConectado.Atendente)
                 {
-                    var clientesAguardandoAtendimento = _servicoUsuario.UsuariosAguardandoAtendimento();
-                    foreach (var usuarioAguardandoAtendimento in clientesAguardandoAtendimento)
-                    {
-                        var objetoResposta = ObjetoResposta(usuarioAguardandoAtendimento);
-                        var respostaParaAtendente = JsonConvert.SerializeObject(objetoResposta, _settings);
-
-                        Send(respostaParaAtendente);
-                    }
-
-                    foreach (var atendimento in usuarioConectado.Atendimentos)
-                    {
-                        var objetoResposta = ObjetoResposta(atendimento.ClienteUsuario, atendimento);
-
-                        var respostaParaAtendente = JsonConvert.SerializeObject(objetoResposta, _settings);
-
-                        Send(respostaParaAtendente);
-                    }
+                    EnviarParaAtendenteClientesAguardandoAtendimento();
+                    EnviarParaAtendenteAtendimentosInicializados(usuarioConectado);
                 }
                 else
                 {
-                    var atendentesDisponiveis = _servicoUsuario.AtendentesDisponiveis();
-                    var atendimento = usuarioConectado.Atendimentos.OrderBy(x => x.DataHora).LastOrDefault();
-
-                    foreach (var atendenteDisponivel in atendentesDisponiveis)
-                    {
-                        var atendimentoIniciado = atendenteDisponivel.Atendimentos.LastOrDefault(x => x.Atendente.Usuario.Login == usuarioConectado.Login);
-                        EnviarMensagem(usuarioConectado, atendenteDisponivel, atendimentoIniciado);
-                    }
-
-                    if (atendimento != null)
-                    {
-                        var objetoRespostaCliente = ObjetoResposta(atendimento.Atendente.Usuario, atendimento);
-                        var respostaParaCliente = JsonConvert.SerializeObject(objetoRespostaCliente, _settings);
-                        Send(respostaParaCliente);
-                    }
+                    EnviarParaAtendentesNovaConexao(usuarioConectado);
                 }
 
             }
@@ -106,6 +77,59 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
             catch (Exception ex)
             {
                 RetornarErro(ex);
+            }
+        }
+
+        private void EnviarParaAtendenteAtendimentosInicializados(Usuario usuarioConectado)
+        {
+            var atendimentosDeUsuarioAtivos = usuarioConectado.Atendimentos.Where(x => x.ClienteUsuario.SessaoWebSocketsAtiva != null);
+
+            foreach (var atendimento in atendimentosDeUsuarioAtivos)
+            {
+                var objetoRespostaParaAtendente = ObjetoResposta(atendimento.ClienteUsuario, atendimento);
+
+                var objetoRespostaParaCliente = ObjetoResposta(atendimento.Atendente.Usuario, atendimento);
+
+                var respostaParaAtendente = JsonConvert.SerializeObject(objetoRespostaParaAtendente, _settings);
+
+                var respostaParaCliente = JsonConvert.SerializeObject(objetoRespostaParaCliente, _settings);
+                
+                var clienteWebSocketDestinatario = ObterClienteWebSocket(atendimento.ClienteUsuario);
+
+                clienteWebSocketDestinatario.Send(respostaParaCliente);
+
+                Send(respostaParaAtendente);
+            }
+        }
+
+        private void EnviarParaAtendenteClientesAguardandoAtendimento()
+        {
+            var clientesAguardandoAtendimento = _servicoUsuario.UsuariosAguardandoAtendimento();
+            foreach (var usuarioAguardandoAtendimento in clientesAguardandoAtendimento)
+            {
+                var objetoResposta = ObjetoResposta(usuarioAguardandoAtendimento);
+                var respostaParaAtendente = JsonConvert.SerializeObject(objetoResposta, _settings);
+
+                Send(respostaParaAtendente);
+            }
+        }
+
+        private void EnviarParaAtendentesNovaConexao(Usuario usuarioConectado)
+        {
+            var atendentesDisponiveis = _servicoUsuario.AtendentesDisponiveis();
+            var atendimento = usuarioConectado.Atendimentos.OrderBy(x => x.DataHora).LastOrDefault();
+
+            foreach (var atendenteDisponivel in atendentesDisponiveis)
+            {
+                var atendimentoIniciado = atendenteDisponivel.Atendimentos.LastOrDefault(x => x.Atendente.Usuario.Login == usuarioConectado.Login);
+                EnviarMensagem(usuarioConectado, atendenteDisponivel, atendimentoIniciado);
+            }
+
+            if (atendimento != null)
+            {
+                var objetoRespostaCliente = ObjetoResposta(atendimento.Atendente.Usuario, atendimento);
+                var respostaParaCliente = JsonConvert.SerializeObject(objetoRespostaCliente, _settings);
+                Send(respostaParaCliente);
             }
         }
 
@@ -162,10 +186,33 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
 
         public override void OnClose()
         {
-            var destinatario = _servicoUsuario.ObterPorChave(_chaveAcesso);
-            _servicoUsuario.RemoverSessaoDoUsuario(destinatario);
-            webSocketClient.Remove(this);
+            var usuarioConectado = _servicoUsuario.ObterPorChave(_chaveAcesso);
 
+            if (usuarioConectado != null)
+            {
+                _servicoUsuario.RemoverSessaoDoUsuario(usuarioConectado);
+                webSocketClient.Remove(this);
+
+                if (usuarioConectado.Atendente)
+                {
+                    var atendimentosDeUsuarioAtivos = usuarioConectado.Atendimentos.Where(x => x.ClienteUsuario.SessaoWebSocketsAtiva != null);
+            
+                    foreach (var item in atendimentosDeUsuarioAtivos)
+	                {
+                        EnviarMensagem(usuarioConectado, item.ClienteUsuario, null);
+	                } 
+                }
+                else
+                {
+                    var atendimentosDeAtendentesAtivos = _servicoUsuario.AtendentesDisponiveis();
+
+                    foreach (var atendente in atendimentosDeAtendentesAtivos)
+                    {
+                        EnviarMensagem(usuarioConectado, atendente, null);
+                    } 
+                }
+            }
+            
             base.OnClose();
         }
 
@@ -176,6 +223,23 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
 
         private static object ObjetoResposta(Usuario usuario, Atendimento conversa = null)
         {
+            var atendimento = conversa != null ? new
+                                                {
+                                                    Id = conversa.Id,
+                                                    Mensagens = conversa.Mensagens
+                                                                        .Select(mensagem =>
+                                                                                    new
+                                                                                    {
+                                                                                        Texto = mensagem.Texto,
+                                                                                        Remetente = new
+                                                                                        {
+                                                                                            Nome = mensagem.Remetente.Nome,
+                                                                                            mensagem.Remetente.ChaveAcesso
+                                                                                        }
+                                                                                    }),
+                                                    Login = usuario.Login
+                                                } : null;
+
             object objetoResposta = new
             {
                 Usuario = new
@@ -183,22 +247,10 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
                     Nome = usuario.Nome,
                     Login = usuario.Login
                 },
-                Conversa = conversa != null ? new
-                {
-                    Id = conversa.Id,
-                    Mensagens = conversa.Mensagens.Select(mensagem =>
-                                                        new
-                                                        {
-                                                            Texto = mensagem.Texto,
-                                                            Remetente = new
-                                                            {
-                                                                Nome = mensagem.Remetente.Nome,
-                                                                mensagem.Remetente.ChaveAcesso
-                                                            }
-                                                        }),
-                    Login = usuario.Login
-                } : null,
+                Conversa = atendimento,
+                UsuarioDesconectado = usuario.SessaoWebSocketsAtiva == null
             };
+
             return objetoResposta;
         }
 
@@ -207,9 +259,9 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
             var objetoRespostaAtendente = ObjetoResposta(remetente, atendimentoIniciado);
 
             var respostaParaAtendente = JsonConvert.SerializeObject(objetoRespostaAtendente, _settings);
-            if (destinatario.UltimaSessaoWebSockets != null)
+            if (destinatario.SessaoWebSocketsAtiva != null)
             {
-                var sessaoDestinatario = webSocketClient.SingleOrDefault(x => x.WebSocketContext.SecWebSocketKey == destinatario.UltimaSessaoWebSockets.ChaveClienteWebSokets);
+                var sessaoDestinatario = ObterClienteWebSocket(destinatario);
 
                 if (sessaoDestinatario != null)
                 {
@@ -220,10 +272,16 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
                     _servicoUsuario.RemoverSessaoDoUsuario(destinatario);
                 }
             }
-            if (destinatario.UltimaSessaoWebSockets == null)
+            if (destinatario.SessaoWebSocketsAtiva == null)
             {
-                throw new ValidacaoException("Destinatario não conectado.");
+                throw new ValidacaoException("Destinatário não conectado.");
             }
+        }
+
+        private static WebSocketHandler ObterClienteWebSocket(Usuario usuario)
+        {
+            var sessaoDestinatario = webSocketClient.SingleOrDefault(x => x.WebSocketContext.SecWebSocketKey == usuario.SessaoWebSocketsAtiva.ChaveClienteWebSokets);
+            return sessaoDestinatario;
         }
 
         private void RetornarErro(Exception ex)
@@ -245,8 +303,6 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
         }
 
         #endregion
-
-
 
         private JsonSerializerSettings ConfigurarSerializacao()
         {
