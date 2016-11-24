@@ -1,32 +1,38 @@
 ﻿var moduloChat = angular.module("ModuloChat", []);
 
-var urlWsHttp = "http://146.148.78.240/";
-var urlWs = "ws://146.148.78.240/";
-//var urlWsHttp = "http://localhost:6100/";
-//var urlWs = "ws://localhost:6100/";
-
+//var urlWsHttp = "http://104.198.254.136/";
+//var urlWs = "ws://104.198.254.136/";
+var urlWsHttp = "http://localhost:6100/";
+var urlWs = "ws://localhost:6100/";
 
 function TratarErro(retorno, matarSessao) {
-
-    if (retorno.TipoErro == 1) {
-        matarSessao();
-    }
-
-    else if (retorno.TipoErro == 3) {
-        alert(retorno.Error);
-    }
-
-    else if (retorno.TipoErro == 2) {
-        alert("Ocorreu um erro inesperado");
-    }
-    else {
+    if (!retorno) {
         alert("Ocorreu um erro inesperado");
     }
 
-    if (typeof (matarSessao) == "function") {
-        matarSessao();
+    switch (retorno.TipoErro) {
+        case Enums.TipoErro.SessaoExpirada:
+            if (typeof (matarSessao) == "function") {
+                matarSessao();
+            }
+            break;
+        case Enums.TipoErro.NaoTratado:
+            alert("Ocorreu um erro inesperado");
+            break;
+
+        case Enums.TipoErro.ErroTratado:
+            alert(retorno.Error);
+            break;
+
     }
 
     console.log(retorno);
 }
 
+var Enums = {
+    TipoErro: {
+        SessaoExpirada : 1,
+        NaoTratado : 2,
+        ErroTratado : 3
+    }
+}
