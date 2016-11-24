@@ -87,7 +87,15 @@ moduloChat.controller('ClienteController', function ($scope, $http, $webSocket, 
     $scope.Chat.Desconectar = function () {
         $webSocket.Desconectar();
 
+        $scope.Chat.Atendente = null;
+        $scope.Chat.Conversa.Mensagens = [];
     };
+
+    $scope.Chat.Remetente.EnviarEnter = function (event) {
+        if (!event.shiftKey && event.keyCode == 13) {
+            $scope.Chat.Remetente.Enviar();
+        }
+    }
 
     $scope.Chat.Remetente.Enviar = function () {
         if (!$scope.Chat.Atendente) {
@@ -96,7 +104,7 @@ moduloChat.controller('ClienteController', function ($scope, $http, $webSocket, 
         }
         if ($scope.Chat.Mensagem) {
             var id = $scope.Chat.Atendente.Conversa.Id;
-            $webSocket.Enviar($scope.Chat.Atendente.Usuario.Login, $scope.Chat.Mensagem, id);
+            $webSocket.Enviar($scope.Chat.Atendente.Usuario.Conversa.Login, $scope.Chat.Mensagem, id);
             $scope.Chat.Conversa.Mensagens.push({ Texto: $scope.Chat.Mensagem, Remetente: $scope.Chat.Remetente });
             $scope.Chat.Mensagem = '';
         }

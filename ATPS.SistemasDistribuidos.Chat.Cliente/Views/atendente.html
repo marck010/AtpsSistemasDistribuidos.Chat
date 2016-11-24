@@ -84,9 +84,12 @@
                         </div>
                     </div>
                     <div class="envio field-form" ng-show="Chat.AtendimentoSelecionado">
-                        <textarea ng-model="Chat.Mensagem" row="50"></textarea>
-                        <input class="botao-enviar" type="button" ng-click="Chat.Remetente.Enviar()" value="Enviar" />
+                        <div class="" ng-show="Chat.AtendimentoSelecionado">
+                            <textarea ng-model="Chat.Mensagem" row="50" ng-keyup="Chat.Remetente.EnviarEnter($event)"></textarea>
+                            <input class="botao-enviar" type="button" ng-click="Chat.Remetente.Enviar()" value="Enviar" />
+                        </div>
                     </div>
+
                 </div>
             </div>
         </div>

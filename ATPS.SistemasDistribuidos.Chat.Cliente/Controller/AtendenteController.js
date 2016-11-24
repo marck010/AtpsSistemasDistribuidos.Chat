@@ -156,6 +156,12 @@ moduloChat.controller('AtendenteController', function ($scope, $http, $webSocket
 
     };
 
+    $scope.Chat.Remetente.EnviarEnter = function (event) {
+        if (!event.shiftKey && event.keyCode == 13) {
+            $scope.Chat.Remetente.Enviar();
+        }
+    }
+
     $scope.Chat.Remetente.Enviar = function () {
 
         if ($scope.Chat.Mensagem) {

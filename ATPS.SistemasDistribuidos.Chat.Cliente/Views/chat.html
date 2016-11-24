@@ -38,6 +38,10 @@
             <div class="chat" ng-show="Chat.Conectado">
 
                 <div class="view-mensagens">
+                    <div class="aviso-indisponibilidade" ng-hide="Chat.Atendente">
+                        <h2>No momento não há nenhum atendente disponivel.Favor aguarde o atendimento. </h2>
+                    </div>
+
                     <div class="mensagens">
                         <div class="mensagem" ng-repeat="mensagem in Chat.Atendente.Conversa.Mensagens">
                             <!--<span class="nome-remetente">{{mensagem.Remetente.Nome}}</span>-->
@@ -45,8 +49,10 @@
                         </div>
                     </div>
                     <div class="envio field-form" ng-show="Chat.Conectado">
-                        <textarea ng-model="Chat.Mensagem" row="50"></textarea>
-                        <input class="botao-enviar" type="button" ng-click="Chat.Remetente.Enviar()" value="Enviar" />
+                        <div class="">
+                            <textarea ng-model="Chat.Mensagem" row="50"></textarea>
+                            <input class="botao-enviar" type="button" ng-keyup="Chat.Remetente.EnviarEnter($event)" ng-click="Chat.Remetente.Enviar()" value="Enviar" />
+                        </div>
                     </div>
                 </div>
 
