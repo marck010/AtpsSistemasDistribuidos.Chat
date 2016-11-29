@@ -6,7 +6,7 @@ using System.Web;
 
 namespace ATPS.SistemasDistribuidos.Chat.Dominio.Entidades
 {
-    public class Usuario : EntidadeBase
+    public class Usuario
     {
         public Usuario()
         {
@@ -14,7 +14,7 @@ namespace ATPS.SistemasDistribuidos.Chat.Dominio.Entidades
             ChaveAcesso = Guid.NewGuid().ToString();
         }
 
-        public Usuario(string nome,  string email, string telefone, bool atendente, string login = null): this()
+        public Usuario(string nome, string email, string telefone, bool atendente, string login = null): this()
         {
             Nome = nome;
             Email = email;
@@ -23,17 +23,17 @@ namespace ATPS.SistemasDistribuidos.Chat.Dominio.Entidades
             Login = atendente ? login : Guid.NewGuid().ToString();
         }
 
-        public string Nome { get; set; }
-        public string Email { get; set; }
-        public string Telefone { get; set; }
-        public string ChaveAcesso { get; set; }
-        public string Login { get; set; }
-        public bool Atendente { get; set; }
-        public bool Disponivel { get; set; }
+        public virtual string Nome { get; set; }
+        public virtual string Email { get; set; }
+        public virtual string Telefone { get; set; }
+        public virtual string ChaveAcesso { get; set; }
+        public virtual string Login { get; set; }
+        public virtual bool Atendente { get; set; }
+        public virtual bool Disponivel { get; set; }
 
-        public SessaoClienteWebSockets SessaoWebSocketsAtiva { get; set; }
+        public virtual SessaoClienteSocket SessaoSocketAtiva { get; set; }
 
-        public List<Atendimento> Atendimentos { get; set; }
+        public virtual List<Atendimento> Atendimentos { get; set; }
 
         public override void Validar()
         {

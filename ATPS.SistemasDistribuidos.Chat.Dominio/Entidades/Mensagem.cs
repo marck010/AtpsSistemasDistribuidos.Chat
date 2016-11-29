@@ -6,18 +6,12 @@ using System.Web;
 
 namespace ATPS.SistemasDistribuidos.Chat.Dominio.Entidades
 {
-    public class Mensagem : EntidadeBase
+    public class Mensagem
     {
-        public string Texto { get; set; }
-        public bool Recebida { get; set; }
+        protected Mensagem()
+        {
 
-        public DateTime DataEnvio { get; set; }
-        public DateTime DataRecebimento { get; set; }
-        public DateTime DataVisualizacao { get; set; }
-
-        public Atendimento Atendimento { get; set; }
-        public Usuario Remetente { get; set; }
-        public Usuario Destinatario { get; set; }
+        }
 
         public Mensagem(string texto, Usuario remetente, Usuario destinatario)
         {
@@ -26,6 +20,18 @@ namespace ATPS.SistemasDistribuidos.Chat.Dominio.Entidades
             Remetente = remetente;
             Destinatario = destinatario;
         }
+
+        public virtual string Texto { get; set; }
+        public virtual bool Recebida { get; set; }
+
+        public virtual DateTime DataEnvio { get; set; }
+        public virtual DateTime DataRecebimento { get; set; }
+        public virtual DateTime DataVisualizacao { get; set; }
+
+        public virtual Atendimento Atendimento { get; set; }
+        public virtual Usuario Remetente { get; set; }
+        public virtual Usuario Destinatario { get; set; }
+
 
         public override  void Validar()
         {

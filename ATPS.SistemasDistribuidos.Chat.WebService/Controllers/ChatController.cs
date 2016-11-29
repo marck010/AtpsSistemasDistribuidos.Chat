@@ -84,7 +84,7 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.Controllers
                 var usuarioLogado = _usuarioServico.ObterPorChave(chaveAcesso);
                 var objetoResposta = ObjetoResposta(usuarioConectado);
                 var respostaParaRemetente = JsonConvert.SerializeObject(objetoResposta, _settings);
-                retorno = ObjetoResposta(usuarioLogado, usuarioLogado.Atendimentos.LastOrDefault(atendimento => atendimento.ClienteUsuario.ChaveAcesso == chaveAcesso));
+                retorno = ObjetoResposta(usuarioLogado, usuarioLogado.Atendimentos.LastOrDefault(atendimento => atendimento.Cliente.ChaveAcesso == chaveAcesso));
 
             }
             return Json(retorno, JsonRequestBehavior.AllowGet);

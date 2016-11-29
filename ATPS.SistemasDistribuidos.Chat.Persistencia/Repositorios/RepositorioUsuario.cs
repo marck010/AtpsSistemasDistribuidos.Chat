@@ -13,12 +13,12 @@ namespace ATPS.SistemasDistribuidos.Chat.Persistencia.Repositorios
     {
         public IList<Usuario> UsuariosAguardandoAtendimento()
         {
-            return Todos().Where(x => x.SessaoWebSocketsAtiva !=null && x.Disponivel && !x.Atendente).ToList();
+            return Todos().Where(x => x.SessaoSocketAtiva !=null && x.Disponivel && !x.Atendente).ToList();
         }
 
         public IList<Usuario> AtendentesDisponiveis()
         {
-            return Todos().Where(x => x.SessaoWebSocketsAtiva != null && x.Disponivel && x.Atendente).ToList();
+            return Todos().Where(x => x.SessaoSocketAtiva != null && x.Disponivel && x.Atendente).ToList();
         }
 
         public Usuario ObterPorChave(string chave, bool naoPermitirNulo = false)

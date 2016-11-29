@@ -20,11 +20,11 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
             _lock = new object();
         }
 
-        public SessaoClienteWebSockets Inserir(string chaveSessaoWebSokets, Usuario usuario)
+        public SessaoClienteSocket Inserir(string chaveSessaoWebSokets, Usuario usuario)
         {
             lock (_lock)
             {
-                var clienteWebSockets = new SessaoClienteWebSockets(chaveSessaoWebSokets, usuario);
+                var clienteWebSockets = new SessaoClienteSocket(chaveSessaoWebSokets, usuario);
 
                 var sessaoSalva = _repositorioSessaoWebSockets.ObterPorChave(usuario.ChaveAcesso);
 
@@ -38,7 +38,7 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
             }
         }
 
-        public IList<SessaoClienteWebSockets> TodosClientesDisponivel()
+        public IList<SessaoClienteSocket> TodosClientesDisponivel()
         {
             return _repositorioSessaoWebSockets.Todos();
         }

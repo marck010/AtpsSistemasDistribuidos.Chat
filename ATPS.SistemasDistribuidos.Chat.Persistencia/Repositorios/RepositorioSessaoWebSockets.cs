@@ -10,9 +10,9 @@ using ATPS.SistemasDistribuidos.Dominio.IOC;
 
 namespace ATPS.SistemasDistribuidos.Chat.Persistencia.Repositorios
 {
-    public class RepositorioSessaoWebSockets : RepositorioBaseIntegrador<SessaoClienteWebSockets>, IRepositorioSessaoWebSockets
+    public class RepositorioSessaoWebSockets : RepositorioBaseIntegrador<SessaoClienteSocket>, IRepositorioSessaoWebSockets
     {
-        public SessaoClienteWebSockets ObterPorChave(string chaveAcesso) 
+        public SessaoClienteSocket ObterPorChave(string chaveAcesso) 
         {
             return Todos().SingleOrDefault(x => x.Usuario.ChaveAcesso == chaveAcesso);
         }

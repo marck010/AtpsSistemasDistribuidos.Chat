@@ -44,8 +44,8 @@
   <ItemGroup>
     <Compile Include="Entidades\Atendimento.cs" />
     <Compile Include="Entidades\Atendente.cs" />
-    <Compile Include="Entidades\SessaoClienteWebSockets.cs" />
     <Compile Include="Entidades\EntidadeBase.cs" />
+    <Compile Include="Entidades\SessaoClienteWebSockets.cs" />
     <Compile Include="Entidades\Mensagem.cs" />
     <Compile Include="Entidades\Usuario.cs" />
     <Compile Include="Excessoes\ValidacaoException.cs" />

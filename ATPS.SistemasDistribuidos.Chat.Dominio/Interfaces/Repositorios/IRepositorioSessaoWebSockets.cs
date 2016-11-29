@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace ATPS.SistemasDistribuidos.Chat.Dominio.Interfaces.Repositorios
 {
-    public interface IRepositorioSessaoWebSockets : IRepositorioBaseIntegrador<SessaoClienteWebSockets>
+    public interface IRepositorioSessaoWebSockets : IRepositorioBaseIntegrador<SessaoClienteSocket>
     {
-        SessaoClienteWebSockets ObterPorChave(string chaveAcesso);
+        SessaoClienteSocket ObterPorChave(string chaveAcesso);
     }
 }

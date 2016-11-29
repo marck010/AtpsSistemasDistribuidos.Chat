@@ -11,13 +11,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATPS.SistemasDistribuidos.C
 		{1A8AAAD6-0495-4171-95B4-4E6CC0309D77} = {1A8AAAD6-0495-4171-95B4-4E6CC0309D77}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATPS.SistemasDistribuidos.Chat.Cliente", "ATPS.SistemasDistribuidos.Chat.Cliente\ATPS.SistemasDistribuidos.Chat.Cliente.csproj", "{7AB45901-D505-4345-952A-0702A7D31561}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATPS.SistemasDistribuidos.Chat.Dominio", "ATPS.SistemasDistribuidos.Chat.Dominio\ATPS.SistemasDistribuidos.Chat.Dominio.csproj", "{1A8AAAD6-0495-4171-95B4-4E6CC0309D77}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATPS.SistemasDistribuidos.Chat.IOC", "ATPS.SistemasDistribuidos.Chat.IOC\ATPS.SistemasDistribuidos.Chat.IOC.csproj", "{A2FCAA1D-CE1A-47F4-8C61-CDF412602A5D}"
 EndProject
 Project("{F088123C-0E9E-452A-89E6-6BA2F21D5CAC}") = "ATPS.SistemasDistribuidos.Chat.Diagramas", "ATPS.SistemasDistribuidos.Chat.Diagramas\ATPS.SistemasDistribuidos.Chat.Diagramas.modelproj", "{56188D4E-9B85-4D6D-A98F-0F23C499AD38}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATPS.SistemasDistribuidos.Chat.Cliente", "ATPS.SistemasDistribuidos.Chat.Cliente\ATPS.SistemasDistribuidos.Chat.Cliente.csproj", "{7AB45901-D505-4345-952A-0702A7D31561}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,10 +33,6 @@ Global
 		{0AE73529-A819-4993-88F9-3627CD1664B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0AE73529-A819-4993-88F9-3627CD1664B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0AE73529-A819-4993-88F9-3627CD1664B8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7AB45901-D505-4345-952A-0702A7D31561}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7AB45901-D505-4345-952A-0702A7D31561}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7AB45901-D505-4345-952A-0702A7D31561}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7AB45901-D505-4345-952A-0702A7D31561}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1A8AAAD6-0495-4171-95B4-4E6CC0309D77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1A8AAAD6-0495-4171-95B4-4E6CC0309D77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A8AAAD6-0495-4171-95B4-4E6CC0309D77}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -49,6 +45,10 @@ Global
 		{56188D4E-9B85-4D6D-A98F-0F23C499AD38}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56188D4E-9B85-4D6D-A98F-0F23C499AD38}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56188D4E-9B85-4D6D-A98F-0F23C499AD38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7AB45901-D505-4345-952A-0702A7D31561}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AB45901-D505-4345-952A-0702A7D31561}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AB45901-D505-4345-952A-0702A7D31561}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AB45901-D505-4345-952A-0702A7D31561}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

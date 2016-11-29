@@ -6,23 +6,23 @@ using System.Web;
 
 namespace ATPS.SistemasDistribuidos.Chat.Dominio.Entidades
 {
-    public class Atendimento : EntidadeBase
+    public class Atendimento
     {
         public Atendimento()
         {
             Mensagens = new List<Mensagem>();
         }
 
-        public DateTime DataHora { get; set; }
+        public virtual DateTime DataHora { get; set; }
 
-        public Usuario ClienteUsuario { get; set; }
-        public Atendente Atendente { get; set; }
-        public List<Mensagem> Mensagens { get; set; }
+        public virtual Usuario Cliente { get; set; }
+        public virtual Atendente Atendente { get; set; }
+        public virtual List<Mensagem> Mensagens { get; set; }
 
         public Atendimento(Usuario cliente, Atendente atendente)
             : this()
         {
-            ClienteUsuario = cliente;
+            Cliente = cliente;
             Atendente = atendente;
             DataHora = DateTime.Now;
         }
@@ -31,7 +31,7 @@ namespace ATPS.SistemasDistribuidos.Chat.Dominio.Entidades
         {
             var erros = new List<string>();
 
-            if (ClienteUsuario == null)
+            if (Cliente == null)
             {
                 erros.Add("O cliente deve ser informado.");
             }

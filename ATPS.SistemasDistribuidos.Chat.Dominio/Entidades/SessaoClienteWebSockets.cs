@@ -6,22 +6,27 @@ using System.Web;
 
 namespace ATPS.SistemasDistribuidos.Chat.Dominio.Entidades
 {
-    public class SessaoClienteWebSockets : EntidadeBase
+    public class SessaoClienteSocket
     {
-        public SessaoClienteWebSockets(string chaveClienteWebSockets, Usuario usuario)
+        protected SessaoClienteSocket()
         {
-            ChaveClienteWebSokets = chaveClienteWebSockets;
+
+        }
+
+        public SessaoClienteSocket(string chaveClienteWebSockets, Usuario usuario)
+        {
+            Chave = chaveClienteWebSockets;
             Usuario = usuario;
         }
 
-        public string ChaveClienteWebSokets { get; set; }
-        public Usuario Usuario { get; set; }
+        public virtual string Chave { get; set; }
+        public virtual Usuario Usuario { get; set; }
 
         public override void Validar()
         {
             var erros = new List<string>();
 
-            if (String.IsNullOrWhiteSpace(ChaveClienteWebSokets))
+            if (String.IsNullOrWhiteSpace(Chave))
             {
                 erros.Add("O ChaveClienteWebSokets deve ser informado.");
             }

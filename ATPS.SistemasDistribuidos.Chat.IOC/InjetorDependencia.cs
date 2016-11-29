@@ -45,7 +45,7 @@ namespace ATPS.SistemasDistribuidos.Chat.IOC
             _nucleo.Registrar<IRepositorioSessaoWebSockets, RepositorioSessaoWebSockets>();
             _nucleo.Registrar<IRepositorioUsuario, RepositorioUsuario>();
 
-            _nucleo.Registrar<IRepositorioBase, RepositorioBaseMemoria>();
+            _nucleo.Registrar<IRepositorioBase, RepositorioBaseSql>();
 
             _nucleo.Registrar<IServicoAtendente, ServicoAtendente>();
             _nucleo.Registrar<IServicoAtendimento, ServicoAtendimento>();

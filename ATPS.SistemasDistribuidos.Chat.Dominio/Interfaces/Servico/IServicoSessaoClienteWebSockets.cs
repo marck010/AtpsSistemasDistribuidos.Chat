@@ -11,7 +11,7 @@ namespace ATPS.SistemasDistribuidos.Dominio.Servicos
 {
     public interface IServicoSessaoWebSockets
     {
-        SessaoClienteWebSockets Inserir(string chaveSessaoWebSokets, Usuario usuario);
-        IList<SessaoClienteWebSockets> TodosClientesDisponivel();
+        SessaoClienteSocket Inserir(string chaveSessaoWebSokets, Usuario usuario);
+        IList<SessaoClienteSocket> TodosClientesDisponivel();
     }
 }

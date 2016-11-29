@@ -82,11 +82,11 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
 
         private void EnviarParaAtendenteAtendimentosInicializados(Usuario usuarioConectado)
         {
-            var atendimentosDeUsuarioAtivos = usuarioConectado.Atendimentos.Where(x => x.ClienteUsuario.SessaoWebSocketsAtiva != null);
+            var atendimentosDeUsuarioAtivos = usuarioConectado.Atendimentos.Where(x => x.Cliente.SessaoSocketAtiva != null);
 
             foreach (var atendimento in atendimentosDeUsuarioAtivos)
             {
-                var objetoRespostaParaAtendente = ObjetoResposta(atendimento.ClienteUsuario, atendimento);
+                var objetoRespostaParaAtendente = ObjetoResposta(atendimento.Cliente, atendimento);
 
                 var objetoRespostaParaCliente = ObjetoResposta(atendimento.Atendente.Usuario, atendimento);
 
@@ -94,7 +94,7 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
 
                 var respostaParaCliente = JsonConvert.SerializeObject(objetoRespostaParaCliente, _settings);
                 
-                var clienteWebSocketDestinatario = ObterClienteWebSocket(atendimento.ClienteUsuario);
+                var clienteWebSocketDestinatario = ObterClienteWebSocket(atendimento.Cliente);
 
                 clienteWebSocketDestinatario.Send(respostaParaCliente);
 
@@ -195,11 +195,11 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
 
                 if (usuarioConectado.Atendente)
                 {
-                    var atendimentosDeUsuarioAtivos = usuarioConectado.Atendimentos.Where(x => x.ClienteUsuario.SessaoWebSocketsAtiva != null);
+                    var atendimentosDeUsuarioAtivos = usuarioConectado.Atendimentos.Where(x => x.Cliente.SessaoSocketAtiva != null);
             
                     foreach (var item in atendimentosDeUsuarioAtivos)
 	                {
-                        EnviarMensagem(usuarioConectado, item.ClienteUsuario, null);
+                        EnviarMensagem(usuarioConectado, item.Cliente, null);
 	                } 
                 }
                 else
@@ -248,7 +248,7 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
                     Login = usuario.Login
                 },
                 Conversa = atendimento,
-                UsuarioDesconectado = usuario.SessaoWebSocketsAtiva == null
+                UsuarioDesconectado = usuario.SessaoSocketAtiva == null
             };
 
             return objetoResposta;
@@ -259,7 +259,7 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
             var objetoRespostaAtendente = ObjetoResposta(remetente, atendimentoIniciado);
 
             var respostaParaAtendente = JsonConvert.SerializeObject(objetoRespostaAtendente, _settings);
-            if (destinatario.SessaoWebSocketsAtiva != null)
+            if (destinatario.SessaoSocketAtiva != null)
             {
                 var sessaoDestinatario = ObterClienteWebSocket(destinatario);
 
@@ -272,7 +272,7 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
                     _servicoUsuario.RemoverSessaoDoUsuario(destinatario);
                 }
             }
-            if (destinatario.SessaoWebSocketsAtiva == null)
+            if (destinatario.SessaoSocketAtiva == null)
             {
                 throw new ValidacaoException("Destinatário não conectado.");
             }
@@ -280,7 +280,7 @@ namespace ATPS.SistemasDistribuidos.Chat.WebService.App_Start.WebSocketsConfigur
 
         private static WebSocketHandler ObterClienteWebSocket(Usuario usuario)
         {
-            var sessaoDestinatario = webSocketClient.SingleOrDefault(x => x.WebSocketContext.SecWebSocketKey == usuario.SessaoWebSocketsAtiva.ChaveClienteWebSokets);
+            var sessaoDestinatario = webSocketClient.SingleOrDefault(x => x.WebSocketContext.SecWebSocketKey == usuario.SessaoSocketAtiva.Chave);
             return sessaoDestinatario;
         }
 

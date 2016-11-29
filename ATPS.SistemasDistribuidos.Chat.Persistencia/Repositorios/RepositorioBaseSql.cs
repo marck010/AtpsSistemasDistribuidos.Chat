@@ -7,79 +7,102 @@ using System.Text;
 using System.Threading.Tasks;
 using ATPS.SistemasDistribuidos.Chat.Dominio.Interfaces.Repositorios;
 using ATPS.SistemasDistribuidos.Dominio.Excessoes;
+using ATPS.SistemasDistribuidos.Chat.Persistencia.NHibernate;
+using NHibernate;
+using NHibernate.Linq;
+using NHibernate.Linq;
+using NHibernate.Impl;
 
 namespace ATPS.SistemasDistribuidos.Chat.Persistencia.Repositorios
 {
     public class RepositorioBaseSql : IRepositorioBase
     {
-        private static List<EntidadeBase> Entidades { get; set; }
-
-        public RepositorioBaseSql()
-        {
-        }
-
-        static RepositorioBaseSql()
-        {
-            Entidades = new List<EntidadeBase>();
-        }
+        private ISession _sessao = ProvedorSessao.ObterSessao();
 
         public T Obter<T>(int id, bool naoPermitirNulo = false) where T : EntidadeBase
         {
-            return (T)Entidades.SingleOrDefault(x => x.GetType() == typeof(T) && x.Id.ToString() == id.ToString());
-        }
+            var objeto = _sessao.Get<T>(id);
 
-        public IList<T> Todos<T>() where T : EntidadeBase
-        {
-            return Entidades.Where(x=>x.GetType() == typeof(T)).Cast<T>().ToList();
-        }
-
-        public void Inserir<T>(T entidade) where T : EntidadeBase
-        {
-            if (!ItemExiste<T>(entidade.Id))
+            if (naoPermitirNulo && objeto == null)
             {
-                if (entidade.Id == null)
+                throw new ValidacaoException(String.Format("Objeto {0} não encontrado", typeof(T).ToString()));
+            }
+
+            return objeto;
+        }
+
+        protected virtual IQueryable<T> Query<T>() where T : EntidadeBase
+        {
+            var query = _sessao.Query<T>();
+            return query;
+        }
+
+        public virtual IList<T> Todos<T>() where T : EntidadeBase
+        {
+            var query = Query<T>();
+            return query.ToList();
+        }
+
+        public virtual void Inserir<T>(T obj) where T : EntidadeBase
+        {
+            using (var transacao = _sessao.BeginTransaction())
+            {
+                try
                 {
-                    int ultimoId = Entidades.Any() ? Todos<T>().Max(x => (int)x.Id) : 0;
-                    entidade.Id = ++ultimoId;
+                    _sessao.Save(obj);
+                    transacao.Commit();
                 }
-                Entidades.Add(entidade);
-            }
-            else
-            {
-                throw new ValidacaoException("Item com o mesmo identificador já inserido.");
-            }
-        }
-
-        public void Atualizar<T>(T entidade) where T : EntidadeBase
-        {
-            if (ItemExiste<T>(entidade.Id))
-            {
-                var entidadeSalva = Obter<T>(entidade.Id);
-                Entidades.Remove((T)entidadeSalva);
-                Entidades.Add((T)entidade);
-            }
-            else
-            {
-                throw new ValidacaoException(String.Format("Objeto com o identificador \"{0}\" não encontrado.", entidade.Id));
+                catch (Exception ex)
+                {
+                    transacao.Rollback();
+                    throw ex;
+                }
             }
         }
 
-        public void Excluir<T>(int id) where T : EntidadeBase
+        public virtual void Atualizar<T>(T obj) where T : EntidadeBase
         {
-            if (ItemExiste<T>(id))
+            using (var transacao = _sessao.BeginTransaction())
             {
-                var item = Obter<T>(id);
-                Entidades.Remove(item);
-            }
-            else
-            {
-                throw new ValidacaoException(String.Format("Item com o identificador \"{0}\" não encontrado.", id));
+                try
+                {
+                    _sessao.Update(obj);
+                    transacao.Commit();
+                }
+                catch (System.Exception ex)
+                {
+                    ((SessionImpl)_sessao).PersistenceContext.EntityEntries.Remove(obj);
+                    transacao.Rollback();
+                    throw ex;
+                }
             }
         }
 
-        private bool ItemExiste<T>(int id) where T : EntidadeBase
+        public virtual void Excluir<T>(int obj) where T : EntidadeBase
         {
-            return Obter<T>(id) != null;
+            using (var transacao = _sessao.BeginTransaction())
+            {
+                try
+                {
+                    _sessao.Delete(obj);
+                    transacao.Commit();
+                }
+                catch (System.Exception ex)
+                {
+                    transacao.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        protected void VerificarNotNull<T>(bool notNull, T obj, int? id = null) where T : EntidadeBase
+        {
+            if (notNull && obj == null)
+            {
+                string mensagem = "Objeto não encontrado: " + typeof(T);
+                if (id != null) mensagem += " / Chave primária: " + id;
+                throw new ValidacaoException(mensagem);
+            }
         }
     }
 }
